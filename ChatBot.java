@@ -106,8 +106,7 @@ public class ChatBot {
         System.out.println("Как тебя зовут?");
         String userName = input.nextLine();
         UserState userState = new UserState(userName);
-        System.out.println(getWelcomeMessage(userName));
-        
+        System.out.println(getWelcomeMessage(userName));        
         int length = questions.length;
         while (userState.getQuestionNumber() < length)
         {
