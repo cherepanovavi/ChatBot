@@ -31,7 +31,7 @@ public class ChatBot {
         return questions[n].question;
     }
     
-    private static String analyzeAnswer(UserState userState, String answer, int questionNumber)
+    protected static String analyzeAnswer(UserState userState, String answer, int questionNumber)
     {
     	String checkKeysRes = findKeys(userState, answer);
     	if (checkKeysRes != null)
@@ -60,12 +60,11 @@ public class ChatBot {
             userState.addScores(scores);
             userState.moveToNextQuestion();
         }
-        else output = "Неправильный ответ";
-        return output;
+        return "Неправильный ответ";
     }
     //надо ли выносить изменение очков в отдельный метод?
 
-    private static String skipQuestion(UserState userState)
+    protected static String skipQuestion(UserState userState)
     {
     	userState.moveToNextQuestion();
     	return "Пропускаем этот вопрос";
@@ -87,12 +86,13 @@ public class ChatBot {
     			"\n Хочешь узнать больше информации отправь мне сообщение, содержащее слово \"справка\" "
                 , userName);
     }
-    private static String getEnding(int score)
+    protected static String getEnding(int score)
     {
-    	if (score == 1)
+    	int modScore = score % 10;
+    	if (modScore == 1)
     		return "о";
-    	if (score > 1 && score < 5)
-    		return "a";
+    	if (modScore > 1 && modScore < 5)
+    		return "а";
     	return "ов";
     }
     private static String getSessionResult(UserState userState)
