@@ -3,8 +3,10 @@ import java.util.Scanner;
 
 
 public class ChatBot {
+	
+	protected static String skipMessage = "Пропускаем этот вопрос."; 
 
-    private static Question[] questions = {new Question("На озере расцвела одна лилия. " +
+    protected static Question[] questions = {new Question("На озере расцвела одна лилия. " +
             "Каждый день число цветков удваивалось, и на двадцатый день все "
             + "\nозеро покрылось цветами. На какой день покрылась цветами "
             + "\nполовина озера?", Arrays.asList("19"), 1),
@@ -31,13 +33,14 @@ public class ChatBot {
         return questions[n].question;
     }
     
-    protected static String analyzeAnswer(UserState userState, String answer, int questionNumber)
+    protected static String analyzeAnswer(UserState userState, String answer)
     {
+    	answer = answer.toLowerCase();
     	String checkKeysRes = findKeys(userState, answer);
     	if (checkKeysRes != null)
     		//is it right check isNull?
     		return checkKeysRes;
-    	return checkAnswer(userState, answer, questionNumber);
+    	return checkAnswer(userState, answer);
     }
     private static String findKeys(UserState userState, String answer)
     {
@@ -49,10 +52,11 @@ public class ChatBot {
     	return null;
     }
 
-    private static String checkAnswer(UserState userState, String input, int questionNumber)
+    private static String checkAnswer(UserState userState, String input)
     {
         String output;
         int scores;
+        int questionNumber = userState.getQuestionNumber();
         if (questions[questionNumber].answers.contains(input))
         {
             output = "Правильный ответ!";
@@ -60,16 +64,18 @@ public class ChatBot {
             userState.addScores(scores);
             userState.moveToNextQuestion();
         }
-        return "Неправильный ответ";
+        else
+        	output = "Неправильный ответ";
+        return output;
     }
     //надо ли выносить изменение очков в отдельный метод?
 
-    protected static String skipQuestion(UserState userState)
+    private static String skipQuestion(UserState userState)
     {
     	userState.moveToNextQuestion();
-    	return "Пропускаем этот вопрос";
+    	return skipMessage;
     }
-    private static String getHelp()
+    protected static String getHelp()
     {
     	return "Напиши свой ответ в следующей строке или введи \"-n\", чтобы пропустить вопрос. " +
                 "Пока никаких фич у меня больше нет, простите";
@@ -112,7 +118,7 @@ public class ChatBot {
         {
             System.out.println(ask(userState));
             String answer = input.nextLine().toLowerCase();
-            System.out.println(analyzeAnswer(userState, answer, userState.getQuestionNumber()));
+            System.out.println(analyzeAnswer(userState, answer));
         }
         System.out.println(getSessionResult(userState));
         input.close();

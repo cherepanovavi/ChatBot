@@ -1,7 +1,7 @@
 public class UserState {
     private int score;
     public final String name;
-    public int questionNumber;
+    private int questionNumber;
 
     public UserState(String username)
     {
