@@ -62,10 +62,10 @@ public class ChatBot {
             output = "Правильный ответ!";
             scores = questions[questionNumber].cost;
             userState.addScores(scores);
-            userState.moveToNextQuestion();
         }
         else
         	output = "Неправильный ответ";
+        userState.moveToNextQuestion();
         return output;
     }
     //надо ли выносить изменение очков в отдельный метод?
@@ -112,7 +112,10 @@ public class ChatBot {
         System.out.println("Как тебя зовут?");
         String userName = input.nextLine();
         UserState userState = new UserState(userName);
-        System.out.println(getWelcomeMessage(userName));        
+        System.out.println(getWelcomeMessage(userName));  
+        String output = findKeys(userState, input.nextLine().toLowerCase());
+        if (output != null)
+        	System.out.println(output);
         int length = questions.length;
         while (userState.getQuestionNumber() < length)
         {
