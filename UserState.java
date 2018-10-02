@@ -1,9 +1,9 @@
-public class UserCondition {
+public class UserState {
     private int score;
     public final String name;
     public int questionNumber;
 
-    public UserCondition(String username)
+    public UserState(String username)
     {
         score = 0;
         name = username;
