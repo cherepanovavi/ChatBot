@@ -75,4 +75,15 @@ public class ChatBotTest {
 
 	}
 	
+	@Test	
+	void testAnalyzeAnswerWrongAnswerOneCase()
+		{
+			String name = "Фёдор";
+			UserState userState = new UserState(name);
+			String answer = "этонеответ";
+			assertEquals(ChatBot.analyzeAnswer(userState, answer), "Неправильный ответ");
+			assertEquals(userState.getScore(), 0);
+			assertEquals(userState.getQuestionNumber(), 1);
+
+	}
 }
