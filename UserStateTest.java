@@ -7,7 +7,7 @@ class UserStateTest {
 	@Test
 	void testCreateUser()
 	{
-		String name = "Фёдор";
+		String name = "Р¤С‘РґРѕСЂ";
 		UserState user = new UserState(name);
 		assertEquals(user.name, name);
 		assertEquals(user.getScore(), 0);
@@ -17,7 +17,7 @@ class UserStateTest {
 	@Test
 	void moveToNextQuestion()
 	{
-		UserState user = new UserState("Афанасий");
+		UserState user = new UserState("РђС„Р°РЅР°СЃРёР№");
 		int questNum = user.getQuestionNumber();
 		user.moveToNextQuestion();
 		assertEquals(user.getQuestionNumber(), questNum+1);
