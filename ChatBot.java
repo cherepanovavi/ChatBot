@@ -4,9 +4,9 @@ import java.util.Scanner;
 
 public class ChatBot {
 	
-	protected static String skipMessage = "Пропускаем этот вопрос."; 
+	String skipMessage = "Пропускаем этот вопрос."; 
 
-    protected static Question[] questions = {new Question("На озере расцвела одна лилия. " +
+    Question[] questions = {new Question("На озере расцвела одна лилия. " +
             "Каждый день число цветков удваивалось, и на двадцатый день все "
             + "\nозеро покрылось цветами. На какой день покрылась цветами "
             + "\nполовина озера?", Arrays.asList("19"), 1),
@@ -27,13 +27,13 @@ public class ChatBot {
     };
     
 
-    private static String ask(UserState userState)
+    private String ask(UserState userState)
     {
         int n = userState.getQuestionNumber();
         return questions[n].question;
     }
     
-    protected static String analyzeAnswer(UserState userState, String answer)
+    String analyzeAnswer(UserState userState, String answer)
     {
     	answer = answer.toLowerCase();
     	String checkKeysRes = findKeys(userState, answer);
@@ -42,7 +42,7 @@ public class ChatBot {
     		return checkKeysRes;
     	return checkAnswer(userState, answer);
     }
-    private static String findKeys(UserState userState, String answer)
+    private String findKeys(UserState userState, String answer)
     {
     	if (answer.contains("помощь") || answer.contains("справка") || answer.contains("?")
     			|| answer.contains("-h"))
@@ -52,7 +52,7 @@ public class ChatBot {
     	return null;
     }
 
-    private static String checkAnswer(UserState userState, String input)
+    private String checkAnswer(UserState userState, String input)
     {
         String output;
         int scores;
@@ -70,29 +70,26 @@ public class ChatBot {
     }
     //надо ли выносить изменение очков в отдельный метод?
 
-    private static String skipQuestion(UserState userState)
+    private String skipQuestion(UserState userState)
     {
     	userState.moveToNextQuestion();
     	return skipMessage;
     }
-    protected static String getHelp()
+    String getHelp()
     {
     	return "Напиши свой ответ в следующей строке или введи \"-n\", чтобы пропустить вопрос. " +
                 "Пока никаких фич у меня больше нет, простите";
     }
-    public static void main(String[] args)
-    {
-        consoleRealisation();
-    }
 
-    private static String getWelcomeMessage(String userName)
+
+    private String getWelcomeMessage(String userName)
     {
     	return String.format("Привет, %s! Предлагаю тебе ответить на несколько каверзных вопросов" +
                 "\n Готов начать? Нажми клавишу Enter."+
     			"\n Хочешь узнать больше информации отправь мне сообщение, содержащее слово \"справка\" "
                 , userName);
     }
-    protected static String getEnding(int score)
+    String getEnding(int score)
     {
     	int modScore = score % 10;
     	if (modScore == 1)
@@ -101,12 +98,12 @@ public class ChatBot {
     		return "а";
     	return "ов";
     }
-    private static String getSessionResult(UserState userState)
+    private String getSessionResult(UserState userState)
     {
     	int finalScore = userState.getScore();
         return String.format("Поздравляю, %s, ты набрал %d очк%s", userState.name, finalScore, getEnding(finalScore));
     }
-    private static void consoleRealisation()
+    public void consoleRealisation()
     {
         Scanner input = new Scanner(System.in);
         System.out.println("Как тебя зовут?");

@@ -6,14 +6,15 @@ public class ChatBotTest {
 	@Test
 	void testGetEnding()
 	{
-		assertEquals(ChatBot.getEnding(0), "ов");
-		assertEquals(ChatBot.getEnding(5), "ов");
-		assertEquals(ChatBot.getEnding(46), "ов");
-		assertEquals(ChatBot.getEnding(21), "о");
-		assertEquals(ChatBot.getEnding(1), "о");
-		assertEquals(ChatBot.getEnding(22), "а");
-		assertEquals(ChatBot.getEnding(3), "а");
-		assertEquals(ChatBot.getEnding(104), "а");		
+		ChatBot chatBot = new ChatBot();
+		assertEquals(chatBot.getEnding(0), "ов");
+		assertEquals(chatBot.getEnding(5), "ов");
+		assertEquals(chatBot.getEnding(46), "ов");
+		assertEquals(chatBot.getEnding(21), "о");
+		assertEquals(chatBot.getEnding(1), "о");
+		assertEquals(chatBot.getEnding(22), "а");
+		assertEquals(chatBot.getEnding(3), "а");
+		assertEquals(chatBot.getEnding(104), "а");		
 	}
 	
 	@Test
@@ -21,10 +22,11 @@ public class ChatBotTest {
 	{
 		String name = "Фёдор";
 		UserState userState = new UserState(name);
-		assertEquals(ChatBot.analyzeAnswer(userState, "Мне нужна помощь"), ChatBot.getHelp());
-		assertEquals(ChatBot.analyzeAnswer(userState, "Справка"), ChatBot.getHelp());
-		assertEquals(ChatBot.analyzeAnswer(userState, " -h"), ChatBot.getHelp());
-		assertEquals(ChatBot.analyzeAnswer(userState, "Что делать?"), ChatBot.getHelp());
+		ChatBot chatBot = new ChatBot();
+		assertEquals(chatBot.analyzeAnswer(userState, "Мне нужна помощь"), chatBot.getHelp());
+		assertEquals(chatBot.analyzeAnswer(userState, "Справка"), chatBot.getHelp());
+		assertEquals(chatBot.analyzeAnswer(userState, " -h"), chatBot.getHelp());
+		assertEquals(chatBot.analyzeAnswer(userState, "Что делать?"), chatBot.getHelp());
 		assertEquals(userState.getQuestionNumber(), 0);
 	}
 
@@ -33,13 +35,14 @@ public class ChatBotTest {
 	{
 		String name = "Фёдор";
 		UserState userState = new UserState(name);
-		assertEquals(ChatBot.analyzeAnswer(userState, " "), ChatBot.skipMessage);
+		ChatBot chatBot = new ChatBot();
+		assertEquals(chatBot.analyzeAnswer(userState, " "), chatBot.skipMessage);
 		assertEquals(userState.getQuestionNumber(), 1);
 		assertEquals(userState.getScore(), 0);
-		assertEquals(ChatBot.analyzeAnswer(userState, "Хочу пропустить"), ChatBot.skipMessage);
+		assertEquals(chatBot.analyzeAnswer(userState, "Хочу пропустить"), chatBot.skipMessage);
 		assertEquals(userState.getQuestionNumber(), 2);
 		assertEquals(userState.getScore(), 0);
-		assertEquals(ChatBot.analyzeAnswer(userState, "Следующий вопрос"),  ChatBot.skipMessage);
+		assertEquals(chatBot.analyzeAnswer(userState, "Следующий вопрос"), chatBot.skipMessage);
 		assertEquals(userState.getQuestionNumber(), 3);
 		assertEquals(userState.getScore(), 0);
 	}
@@ -50,11 +53,12 @@ public class ChatBotTest {
 		String name = "Фёдор";
 		UserState userState = new UserState(name);
 		int scores = 0;
-		for (int i = 0; i < ChatBot.questions.length; i ++)
+		ChatBot chatBot = new ChatBot();
+		for (int i = 0; i < chatBot.questions.length; i ++)
 		{
-			String answer = ChatBot.questions[i].answers.get(0);
-			assertEquals(ChatBot.analyzeAnswer(userState, answer), "Правильный ответ!");
-			scores = scores + ChatBot.questions[i].cost;
+			String answer = chatBot.questions[i].answers.get(0);
+			assertEquals(chatBot.analyzeAnswer(userState, answer), "Правильный ответ!");
+			scores = scores + chatBot.questions[i].cost;
 			assertEquals(userState.getScore(), scores);
 			assertEquals(userState.getQuestionNumber(), i + 1);
 			
@@ -67,9 +71,10 @@ public class ChatBotTest {
 			String name = "Фёдор";
 			UserState userState = new UserState(name);
 			int scores = 0;
-			String answer = ChatBot.questions[0].answers.get(0);
-			assertEquals(ChatBot.analyzeAnswer(userState, answer), "Правильный ответ!");
-			scores = scores + ChatBot.questions[0].cost;
+			ChatBot chatBot = new ChatBot();
+			String answer = chatBot.questions[0].answers.get(0);
+			assertEquals(chatBot.analyzeAnswer(userState, answer), "Правильный ответ!");
+			scores = scores + chatBot.questions[0].cost;
 			assertEquals(userState.getScore(), scores);
 			assertEquals(userState.getQuestionNumber(), 1);
 
