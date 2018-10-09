@@ -90,6 +90,5 @@ public class ChatBotTest {
 			assertEquals(chatBot.analyzeAnswer(userState, answer), "Неправильный ответ");
 			assertEquals(userState.getScore(), 0);
 			assertEquals(userState.getQuestionNumber(), 1);
-
 	}
 }

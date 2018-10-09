@@ -1,21 +1,29 @@
+import javafx.application.Application;
+import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.Scanner;
 
+public class ChatBot extends Application {
 
-public class ChatBot {
-	
 	String skipMessage = "Пропускаем этот вопрос."; 
 
     Question[] questions = {new Question("На озере расцвела одна лилия. " +
             "Каждый день число цветков удваивалось, и на двадцатый день все "
             + "\nозеро покрылось цветами. На какой день покрылась цветами "
-            + "\nполовина озера?", Arrays.asList("19"), 1),
+            + "\nполовина озера?", Arrays.asList("19"), 1, "Если озеро полностью покрылось лилиями на 20-ый день," +
+            " то наполовину оно покроется на 19 день, ведь каждый день количество лилий увеличивается вдвое",
+            "\nОбратите внимание на то, во сколько раз увеличивается количество цветов  за день"),
             new Question("Сколько тонн земли находится в яме размера 2x2x2 метра",
-                    Arrays.asList("0"), 1),
+                    Arrays.asList("0"), 1, "Ответ конечно же 0, откуда в яме земля, её же выкопали",
+                    "\nВ ней будет столько же тонн земли, сколько и в яме 3х3х3"),
             new Question("Введите следующий символ последовательности С О Н Д Я Ф М А",
-                    Arrays.asList("м"), 1),
+                    Arrays.asList("м"), 1, "Ответ буква \"м\", потому что буквы обозначают месяцы:" +
+                    " Сентябрь, Октябрь и так далее до Апреля, а после Апреля идет Май",
+                    "\nНа самом деле букв в последовательности должно быть 12"),
             new Question("Обогнав в спринте третьего бегуна на каком месте вы окажетесь",
-                    Arrays.asList("3", "третий", "третьем", "на третьем"), 1),
+                    Arrays.asList("3", "третий", "третьем", "на третьем"), 1, "Вы будете на третьем месте," +
+                    " все же легко, просто представьте себя участником такого забега",
+                    "\nВы будете на золоте)"),
             new Question("Малыш спрятал от Карлсона банку с вареньем в "
                     + "\nодну из трех разноцветных коробок. На коробках"
                     + "\nМалыш сделал надписи: на красной – «Здесь варенья нет»; "
@@ -23,9 +31,11 @@ public class ChatBot {
                     + "\n«Варенье в синей коробке». Только одна из надписей п"
                     + "\nравдива. В какой коробке Малыш спрятал варенье?",
                     Arrays.asList("в зеленой", "в зелёной", "зеленой",
-                            "зелёной"), 2)
+                            "зелёной"), 2, "Правильный ответ: в зелёной. Здесь работает простой метод исключения." +
+                    "\nВ синей быть не может,в этом случае нарушается условие единственности правдивой надписи, так как на зеленой написано, что варенье в синей. " +
+                    "\nВ то же время варенье не может быть и в красной, так как все надписи были бы лживы",
+                    "\nПочитайте внимательно и постарайтесь исключить неправильные варианты, в конце концов, их всего три, а у вас есть три попытки, думаю, у вас все получится)")
     };
-    
 
     private String ask(UserState userState)
     {
@@ -42,6 +52,7 @@ public class ChatBot {
     		return checkKeysRes;
     	return checkAnswer(userState, answer);
     }
+
     private String findKeys(UserState userState, String answer)
     {
     	if (answer.contains("помощь") || answer.contains("справка") || answer.contains("?")
@@ -49,6 +60,8 @@ public class ChatBot {
     		return getHelp();
     	if (answer.equals(" ") || answer.contains("пропустить") || answer.contains("следующий"))
     		return skipQuestion(userState);
+    	if (answer.equals("подсказка") || answer.equals("hint"))
+    	    return questions[userState.getQuestionNumber()].hint;
     	return null;
     }
 
@@ -62,10 +75,23 @@ public class ChatBot {
             output = "Правильный ответ!";
             scores = questions[questionNumber].cost;
             userState.addScores(scores);
+            userState.moveToNextQuestion();
+        }
+        else if (questions[questionNumber].attempts == 2)
+        {
+            output = String.format("Неправильный ответ, у тебя осталось %d попытки", questions[questionNumber].attempts);
+            questions[questionNumber].attempts -= 1;
+        }
+        else if (questions[questionNumber].attempts == 1)
+        {
+            output = "Неправильный ответ, у тебя осталось последняя попытка";
+            questions[questionNumber].attempts -= 1;
         }
         else
-        	output = "Неправильный ответ";
-        userState.moveToNextQuestion();
+        {
+            output = String.format("У тебя закончились попытки. \n%s \nПереходим к следующему вопросу", questions[questionNumber].explanation);
+            userState.moveToNextQuestion();
+        }
         return output;
     }
     //надо ли выносить изменение очков в отдельный метод?
@@ -75,12 +101,13 @@ public class ChatBot {
     	userState.moveToNextQuestion();
     	return skipMessage;
     }
+
     String getHelp()
     {
-    	return "Напиши свой ответ в следующей строке или введи \"-n\", чтобы пропустить вопрос. " +
+    	return "Напиши свой ответ в следующей строке или введи \"пропустить\\следующий\", чтобы пропустить вопрос. " +
+                "Ты можешь попросить подсказку по вопросу, для этого напиши \"подсказка\"\\hint\"" +
                 "Пока никаких фич у меня больше нет, простите";
     }
-
 
     private String getWelcomeMessage(String userName)
     {
@@ -89,6 +116,7 @@ public class ChatBot {
     			"\n Хочешь узнать больше информации отправь мне сообщение, содержащее слово \"справка\" "
                 , userName);
     }
+
     String getEnding(int score)
     {
     	int modScore = score % 10;
@@ -98,11 +126,13 @@ public class ChatBot {
     		return "а";
     	return "ов";
     }
+
     private String getSessionResult(UserState userState)
     {
     	int finalScore = userState.getScore();
         return String.format("Поздравляю, %s, ты набрал %d очк%s", userState.name, finalScore, getEnding(finalScore));
     }
+
     public void consoleRealisation()
     {
         Scanner input = new Scanner(System.in);
@@ -122,5 +152,10 @@ public class ChatBot {
         }
         System.out.println(getSessionResult(userState));
         input.close();
-      }
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+    }
 }
