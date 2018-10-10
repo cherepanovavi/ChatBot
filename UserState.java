@@ -1,3 +1,5 @@
+package Source;
+
 public class UserState {
     private int score;
     public final String name;
