@@ -89,7 +89,8 @@ public class ChatBot extends Application {
         }
         else
         {
-            output = String.format("У тебя закончились попытки. \n%s \nПереходим к следующему вопросу", questions[questionNumber].explanation);
+            output = String.format("У тебя закончились попытки. \n%s \nПереходим к следующему вопросу",
+                    questions[questionNumber].explanation);
             userState.moveToNextQuestion();
         }
         return output;
@@ -105,8 +106,8 @@ public class ChatBot extends Application {
     String getHelp()
     {
     	return "Напиши свой ответ в следующей строке или введи \"пропустить\\следующий\", чтобы пропустить вопрос. " +
-                "Ты можешь попросить подсказку по вопросу, для этого напиши \"подсказка\"\\hint\"" +
-                "Пока никаких фич у меня больше нет, простите";
+                "\nТы можешь попросить подсказку по вопросу, для этого напиши \"подсказка\\hint\"" +
+                "\nПока никаких фич у меня больше нет, простите";
     }
 
     private String getWelcomeMessage(String userName)
