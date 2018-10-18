@@ -1,11 +1,20 @@
 package Source;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.KeyEvent;
+
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Scanner;
 
-public class ChatBot extends Application {
+
+public class ChatBot {
+    UserState userState;
 
 	String skipMessage = "Пропускаем этот вопрос."; 
 
@@ -57,6 +66,8 @@ public class ChatBot extends Application {
 
     private String findKeys(UserState userState, String answer)
     {
+        //if (answer.contains("готов"))
+          //  return questions[userState.getQuestionNumber()].question;
     	if (answer.contains("помощь") || answer.contains("справка") || answer.contains("?")
     			|| answer.contains("-h"))
     		return getHelp();
@@ -157,8 +168,41 @@ public class ChatBot extends Application {
         input.close();
     }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
+    @FXML
+    private TextArea chatArea;
+    @FXML
+    private TextArea answerArea;
+    @FXML
+    private Button nameEnter;
+    public void realisationForGUI(UserState userState)
+    {
+        String input = answerArea.getText();
+        if (!input.equals(""))
+        {
+            chatArea.appendText("\n[ВЫ]: " + input);
+            chatArea.appendText("\n[БОТ]:" + analyzeAnswer(userState, input));
+        }
+        answerArea.deleteText(0, input.length());
+        if (userState.getQuestionNumber() == questions.length)
+            chatArea.appendText("\n[БОТ]:" + getSessionResult(userState));
+    }
+    public void showInputTextDialog()
+    {
+        TextInputDialog dialog = new TextInputDialog();
 
+        dialog.setTitle("Приветствие");
+        dialog.setHeaderText("Как тебя зовут?");
+        dialog.setContentText("Имя:");
+        Optional<String> result = dialog.showAndWait();
+
+        String userName = result.toString();
+        userState = new UserState(userName);
+        chatArea.appendText("\n[БОТ]:" + getWelcomeMessage(userName));
+        nameEnter.setDisable(true);
+    }
+    public void onAnswer(ActionEvent actionEvent)
+    {
+        realisationForGUI(userState);
+        chatArea.appendText("\n[БОТ]: " + ask(userState));
     }
 }
