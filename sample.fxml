@@ -5,15 +5,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Source.ChatBot">
+<AnchorPane prefHeight="528.0" prefWidth="1162.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Source.ChatBot">
    <children>
-      <Button fx:id="answerButton" layoutY="676.0" mnemonicParsing="false" onAction="#onAnswer" prefHeight="48.0" prefWidth="69.0" text="Ответ" />
-      <Button fx:id="nameEnter" layoutX="69.0" layoutY="676.0" mnemonicParsing="false" onAction="#showInputTextDialog" prefHeight="48.0" prefWidth="177.0" text="Введите свое имя" />
-      <TextArea fx:id="answerArea" layoutX="246.0" layoutY="674.0" prefHeight="48.0" prefWidth="1103.0" />
-      <TextArea fx:id="chatArea" editable="false" layoutX="-1.0" prefHeight="680.0" prefWidth="1350.0" text="Пожалуйста, представьтесь!">
+      <TextArea fx:id="chatArea" editable="false" layoutX="-1.0" prefHeight="680.0" prefWidth="1350.0" text="Пожалуйста, представьтесь!" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>
       </TextArea>
+      <TextArea fx:id="answerArea" layoutX="246.0" layoutY="674.0" prefHeight="48.0" prefWidth="1103.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="246.0" AnchorPane.rightAnchor="0.0" />
+      <Button fx:id="answerButton" layoutY="676.0" mnemonicParsing="false" onAction="#onAnswer" prefHeight="48.0" prefWidth="69.0" text="Ответ" AnchorPane.bottomAnchor="0.0" />
+      <Button fx:id="nameEnter" layoutX="69.0" layoutY="676.0" mnemonicParsing="false" onAction="#showInputTextDialog" prefHeight="48.0" prefWidth="177.0" text="Введите свое имя" AnchorPane.bottomAnchor="0.0" />
    </children>
 </AnchorPane>
