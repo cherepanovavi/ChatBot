@@ -174,6 +174,8 @@ public class ChatBot {
     private TextArea answerArea;
     @FXML
     private Button nameEnter;
+    @FXML
+    private Button answerButton;
     public void realisationForGUI(UserState userState)
     {
         String input = answerArea.getText();
@@ -199,6 +201,8 @@ public class ChatBot {
         userState = new UserState(userName);
         chatArea.appendText("\n[БОТ]:" + getWelcomeMessage(userName));
         nameEnter.setDisable(true);
+        nameEnter.setVisible(false);
+        answerButton.setPrefWidth(answerButton.getWidth() + nameEnter.getWidth());
     }
     public void onAnswer(ActionEvent actionEvent)
     {

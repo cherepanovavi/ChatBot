@@ -19,6 +19,8 @@ public class Program extends Application {
     {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Chat bot");
+        primaryStage.setMinWidth(500);
+        primaryStage.setMinHeight(500);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
