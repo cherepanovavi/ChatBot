@@ -7,7 +7,6 @@ public class Question {
     public final List<String> answers;
     public final int cost;
     public final String  explanation;
-    public int attempts;
     public final String hint;
     public Question(String question, List<String> answer, int cost, String explanation, String hint)
     {
@@ -16,6 +15,5 @@ public class Question {
         this.cost = cost;
         this.explanation = explanation;
         this.hint = hint;
-        attempts = 2;
     }
 }

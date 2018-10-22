@@ -15,17 +15,18 @@ import java.util.Scanner;
 
 public class ChatBot {
     UserState userState;
+    static int attemptsCount = 2;
 
 	String skipMessage = "Пропускаем этот вопрос."; 
 
     Question[] questions = {new Question("На озере расцвела одна лилия. " +
             "Каждый день число цветков удваивалось, и на двадцатый день все "
             + "\nозеро покрылось цветами. На какой день покрылась цветами "
-            + "\nполовина озера?", Arrays.asList("19"), 1, "Если озеро полностью покрылось лилиями на 20-ый день," +
+            + "\nполовина озера?", Arrays.asList("19", "девятнадцать"), 1, "Если озеро полностью покрылось лилиями на 20-ый день," +
             " то наполовину оно покроется на 19 день, ведь каждый день количество лилий увеличивается вдвое",
             "\nОбратите внимание на то, во сколько раз увеличивается количество цветов  за день"),
             new Question("Сколько тонн земли находится в яме размера 2x2x2 метра",
-                    Arrays.asList("0"), 1, "Ответ конечно же 0, откуда в яме земля, её же выкопали",
+                    Arrays.asList("0", "ноль"), 1, "Ответ конечно же 0, откуда в яме земля, её же выкопали",
                     "\nВ ней будет столько же тонн земли, сколько и в яме 3х3х3"),
             new Question("Введите следующий символ последовательности С О Н Д Я Ф М А",
                     Arrays.asList("м"), 1, "Ответ буква \"м\", потому что буквы обозначают месяцы:" +
@@ -42,7 +43,7 @@ public class ChatBot {
                     + "\n«Варенье в синей коробке». Только одна из надписей п"
                     + "\nравдива. В какой коробке Малыш спрятал варенье?",
                     Arrays.asList("в зеленой", "в зелёной", "зеленой",
-                            "зелёной"), 2, "Правильный ответ: в зелёной. Здесь работает простой метод исключения." +
+                            "зелёной", "зеленая", "зелёная"), 2, "Правильный ответ: в зелёной. Здесь работает простой метод исключения." +
                     "\nВ синей быть не может,в этом случае нарушается условие единственности правдивой надписи, так как на зеленой написано, что варенье в синей. " +
                     "\nВ то же время варенье не может быть и в красной, так как все надписи были бы лживы",
                     "\nПочитайте внимательно и постарайтесь исключить неправильные варианты, в конце концов, их всего три, а у вас есть три попытки, думаю, у вас все получится)")
@@ -54,20 +55,26 @@ public class ChatBot {
         return questions[n].question;
     }
     
-    String analyzeAnswer(UserState userState, String answer)
+    String[] analyzeAnswer(UserState userState, String answer)
     {
+        var result = new String[2];
+        var qN1 = userState.getQuestionNumber();
     	answer = answer.toLowerCase();
     	String checkKeysRes = findKeys(userState, answer);
     	if (checkKeysRes != null)
-    		//is it right check isNull?
-    		return checkKeysRes;
-    	return checkAnswer(userState, answer);
+    		result[0] = checkKeysRes;
+    	else
+    	    result[0] = checkAnswer(userState, answer);
+    	var qN2 = userState.getQuestionNumber();
+    	if ((qN2 > qN1)&& (qN2 < questions.length))
+    	    result[1] = ask(userState);
+    	return result;
     }
 
     private String findKeys(UserState userState, String answer)
     {
-        //if (answer.contains("готов"))
-          //  return questions[userState.getQuestionNumber()].question;
+        if (answer.contains("готов"))
+            return ask(userState);
     	if (answer.contains("помощь") || answer.contains("справка") || answer.contains("?")
     			|| answer.contains("-h"))
     		return getHelp();
@@ -90,15 +97,10 @@ public class ChatBot {
             userState.addScores(scores);
             userState.moveToNextQuestion();
         }
-        else if (questions[questionNumber].attempts == 2)
+        else if (userState.getQuestionAttempts() > 0)
         {
-            output = String.format("Неправильный ответ, у тебя осталось %d попытки", questions[questionNumber].attempts);
-            questions[questionNumber].attempts -= 1;
-        }
-        else if (questions[questionNumber].attempts == 1)
-        {
-            output = "Неправильный ответ, у тебя осталось последняя попытка";
-            questions[questionNumber].attempts -= 1;
+            output = String.format("Неправильный ответ, у тебя осталось %d попытки", userState.getQuestionAttempts());
+            userState.spendAnAttempt();
         }
         else
         {
@@ -126,7 +128,7 @@ public class ChatBot {
     private String getWelcomeMessage(String userName)
     {
     	return String.format("Привет, %s! Предлагаю тебе ответить на несколько каверзных вопросов" +
-                "\n Готов начать? Нажми клавишу Enter."+
+                "\n Готов начать? Отправь сообщение со словом \"готов\""+
     			"\n Хочешь узнать больше информации отправь мне сообщение, содержащее слово \"справка\" "
                 , userName);
     }
@@ -162,7 +164,10 @@ public class ChatBot {
         {
             System.out.println(ask(userState));
             String answer = input.nextLine().toLowerCase();
-            System.out.println(analyzeAnswer(userState, answer));
+            var botAnswer = analyzeAnswer(userState, answer);
+            for(int i=0; i<botAnswer.length; i++)
+                if(botAnswer[i] != null)
+                    System.out.println(botAnswer[i]);
         }
         System.out.println(getSessionResult(userState));
         input.close();
@@ -180,7 +185,10 @@ public class ChatBot {
         if (!input.equals(""))
         {
             chatArea.appendText("\n[ВЫ]: " + input);
-            chatArea.appendText("\n[БОТ]:" + analyzeAnswer(userState, input));
+            var botAnswer = analyzeAnswer(userState, input);
+            for(int i=0; i<botAnswer.length; i++)
+                if(botAnswer[i] != null)
+                    chatArea.appendText("\n[БОТ]:" + botAnswer[i]);
         }
         answerArea.deleteText(0, input.length());
         if (userState.getQuestionNumber() == questions.length)
@@ -203,6 +211,5 @@ public class ChatBot {
     public void onAnswer(ActionEvent actionEvent)
     {
         realisationForGUI(userState);
-        chatArea.appendText("\n[БОТ]: " + ask(userState));
     }
 }
