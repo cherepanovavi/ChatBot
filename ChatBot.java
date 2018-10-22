@@ -29,7 +29,7 @@ public class ChatBot {
                     Arrays.asList("0", "ноль"), 1, "Ответ конечно же 0, откуда в яме земля, её же выкопали",
                     "\nВ ней будет столько же тонн земли, сколько и в яме 3х3х3"),
             new Question("Введите следующий символ последовательности С О Н Д Я Ф М А",
-                    Arrays.asList("м"), 1, "Ответ буква \"м\", потому что буквы обозначают месяцы:" +
+                    Arrays.asList("м", "май"), 1, "Ответ буква \"м\", потому что буквы обозначают месяцы:" +
                     " Сентябрь, Октябрь и так далее до Апреля, а после Апреля идет Май",
                     "\nНа самом деле букв в последовательности должно быть 12"),
             new Question("Обогнав в спринте третьего бегуна на каком месте вы окажетесь",
@@ -165,9 +165,11 @@ public class ChatBot {
             System.out.println(ask(userState));
             String answer = input.nextLine().toLowerCase();
             var botAnswer = analyzeAnswer(userState, answer);
-            for(int i=0; i<botAnswer.length; i++)
-                if(botAnswer[i] != null)
-                    System.out.println(botAnswer[i]);
+            for (var bAnswer:botAnswer)
+            {
+                if(bAnswer != null)
+                    System.out.println(bAnswer);
+            }
         }
         System.out.println(getSessionResult(userState));
         input.close();
@@ -188,9 +190,11 @@ public class ChatBot {
         {
             chatArea.appendText("\n[ВЫ]: " + input);
             var botAnswer = analyzeAnswer(userState, input);
-            for(int i=0; i<botAnswer.length; i++)
-                if(botAnswer[i] != null)
-                    chatArea.appendText("\n[БОТ]:" + botAnswer[i]);
+            for (var answer:botAnswer)
+            {
+                if(answer != null)
+                    chatArea.appendText("\n[БОТ]:" + answer);
+            }
         }
         answerArea.deleteText(0, input.length());
         if (userState.getQuestionNumber() == questions.length)
@@ -205,7 +209,7 @@ public class ChatBot {
         dialog.setContentText("Имя:");
         Optional<String> result = dialog.showAndWait();
 
-        String userName = result.toString();
+        var userName = result.get();
         userState = new UserState(userName);
         chatArea.appendText("\n[БОТ]:" + getWelcomeMessage(userName));
         nameEnter.setDisable(true);
