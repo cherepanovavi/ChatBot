@@ -16,10 +16,9 @@ import java.util.Scanner;
 
 public class ChatBot {
     private UserState userState;
-    Boolean isChatting = false;
     static int attemptsCount = 2;
 
-	String skipMessage = "Пропускаем этот вопрос."; 
+	String getSkipMessage() {return "Пропускаем этот вопрос.";}
 
     Question[] questions = {new Question("На озере расцвела одна лилия. " +
             "Каждый день число цветков удваивалось, и на двадцатый день все "
@@ -54,7 +53,7 @@ public class ChatBot {
     private String ask(UserState userState)
     {
         int n = userState.getQuestionNumber();
-        return questions[n].question;
+        return questions[n].getQuestion();
     }
     
     ArrayList<String> analyzeAnswer(UserState userState, String answer)
@@ -84,7 +83,7 @@ public class ChatBot {
     	if (answer.equals(" ") || answer.contains("пропустить") || answer.contains("следующий"))
     		return skipQuestion(userState);
     	if (answer.equals("подсказка") || answer.equals("hint"))
-    	    return questions[userState.getQuestionNumber()].hint;
+    	    return questions[userState.getQuestionNumber()].getHint();
     	return null;
     }
 
@@ -93,7 +92,7 @@ public class ChatBot {
         String output;
         int scores;
         int questionNumber = userState.getQuestionNumber();
-        if (questions[questionNumber].answers.contains(input))
+        if (questions[questionNumber].isRightAnswer(input))
         {
             output = "Правильный ответ!";
             scores = questions[questionNumber].cost;
@@ -108,7 +107,7 @@ public class ChatBot {
         else
         {
             output = String.format("У тебя закончились попытки. \n%s \nПереходим к следующему вопросу",
-                    questions[questionNumber].explanation);
+                    questions[questionNumber].getExplanation());
             userState.moveToNextQuestion();
         }
         return output;
@@ -118,7 +117,7 @@ public class ChatBot {
     private String skipQuestion(UserState userState)
     {
     	userState.moveToNextQuestion();
-    	return skipMessage;
+    	return getSkipMessage();
     }
 
     String getHelp()
