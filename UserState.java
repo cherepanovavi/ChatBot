@@ -10,7 +10,7 @@ public class UserState {
     {
         score = 0;
         name = username;
-        questionNumber = 0;
+        questionNumber = -1;
         questionAttempts = ChatBot.attemptsCount;
     }
     public void addScores(int newScores)

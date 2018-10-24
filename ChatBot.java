@@ -8,13 +8,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.KeyEvent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Scanner;
 
 
 public class ChatBot {
-    UserState userState;
+    private UserState userState;
+    Boolean isChatting = false;
     static int attemptsCount = 2;
 
 	String skipMessage = "Пропускаем этот вопрос."; 
@@ -55,26 +57,27 @@ public class ChatBot {
         return questions[n].question;
     }
     
-    String[] analyzeAnswer(UserState userState, String answer)
+    ArrayList<String> analyzeAnswer(UserState userState, String answer)
     {
-        var result = new String[2];
+        var result = new ArrayList<String>();
         var qN1 = userState.getQuestionNumber();
     	answer = answer.toLowerCase();
     	String checkKeysRes = findKeys(userState, answer);
     	if (checkKeysRes != null)
-    		result[0] = checkKeysRes;
-    	else
-    	    result[0] = checkAnswer(userState, answer);
-    	var qN2 = userState.getQuestionNumber();
-    	if ((qN2 > qN1)&& (qN2 < questions.length))
-    	    result[1] = ask(userState);
+    		result.add(checkKeysRes);
+    	else if (qN1 == -1) {
+            userState.moveToNextQuestion();
+        }
+        else
+            result.add(checkAnswer(userState, answer));
+        var qN2 = userState.getQuestionNumber();
+    	if ((qN2 > qN1) && (qN2 < questions.length))
+    	    result.add(ask(userState));
     	return result;
     }
 
     private String findKeys(UserState userState, String answer)
     {
-        if (answer.contains("готов"))
-            return ask(userState);
     	if (answer.contains("помощь") || answer.contains("справка") || answer.contains("?")
     			|| answer.contains("-h"))
     		return getHelp();
@@ -128,7 +131,7 @@ public class ChatBot {
     private String getWelcomeMessage(String userName)
     {
     	return String.format("Привет, %s! Предлагаю тебе ответить на несколько каверзных вопросов" +
-                "\n Готов начать? Отправь сообщение со словом \"готов\""+
+                "\n Готов начать? Отправь любое сообщение"+
     			"\n Хочешь узнать больше информации отправь мне сообщение, содержащее слово \"справка\" "
                 , userName);
     }
@@ -186,10 +189,11 @@ public class ChatBot {
     public void realisationForGUI(UserState userState)
     {
         String input = answerArea.getText();
-        if (!input.equals(""))
+        if (!input.equals("") && userState.name != null)
         {
             chatArea.appendText("\n[ВЫ]: " + input);
             var botAnswer = analyzeAnswer(userState, input);
+            //if (isChatting)
             for (var answer:botAnswer)
             {
                 if(answer != null)
@@ -202,14 +206,19 @@ public class ChatBot {
     }
     public void showInputTextDialog()
     {
-        TextInputDialog dialog = new TextInputDialog();
+        TextInputDialog dialog = new TextInputDialog("User");
 
         dialog.setTitle("Приветствие");
         dialog.setHeaderText("Как тебя зовут?");
         dialog.setContentText("Имя:");
         Optional<String> result = dialog.showAndWait();
 
-        var userName = result.get();
+        String userName;
+        if (result.isPresent() && !result.get().equals(""))
+            userName = result.get();
+        else
+            userName = dialog.getDefaultValue();
+
         userState = new UserState(userName);
         chatArea.appendText("\n[БОТ]:" + getWelcomeMessage(userName));
         nameEnter.setDisable(true);
