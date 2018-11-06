@@ -1,11 +1,13 @@
 package Source;
 
 
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
@@ -16,7 +18,15 @@ import java.util.Scanner;
 
 public class ChatBot {
     private UserState userState;
+    private ObservableList<UserState> usersList = FXCollections.observableArrayList();
     static int attemptsCount = 2;
+
+    void feelTestData()
+    {
+        usersList.add(new UserState("Артем"));
+        usersList.add(new UserState("Nikita"));
+        usersList.add(new UserState("Gregory"));
+    }
 
 	String getSkipMessage() {return "Пропускаем этот вопрос.";}
 
@@ -60,7 +70,7 @@ public class ChatBot {
     {
         var result = new ArrayList<String>();
         var qN1 = userState.getQuestionNumber();
-    	answer = answer.toLowerCase();
+    	answer.toLowerCase();
     	String checkKeysRes = findKeys(userState, answer);
     	if (checkKeysRes != null)
     		result.add(checkKeysRes);
@@ -148,7 +158,7 @@ public class ChatBot {
     private String getSessionResult(UserState userState)
     {
     	int finalScore = userState.getScore();
-        return String.format("Поздравляю, %s, ты набрал %d очк%s", userState.name, finalScore, getEnding(finalScore));
+        return String.format("Поздравляю, %s, ты набрал %d очк%s", userState.getName(), finalScore, getEnding(finalScore));
     }
 
     public void consoleRealisation()
@@ -179,20 +189,51 @@ public class ChatBot {
 
     @FXML
     private TextArea chatArea;
+
     @FXML
-    private TextArea answerArea;
+    private TextField answerArea;
+
     @FXML
     private Button nameEnter;
+
     @FXML
     private Button answerButton;
+
+    @FXML
+    private TableView usersTable;
+
+    @FXML
+    private TableColumn<?, ?> userColumn;
+
+    @FXML
+    private TableColumn<?, ?> scoreColumn;
+
+    @FXML
+    private TableColumn<?, ?> attemptsColumn;
+
+    @FXML
+    private void initialize()
+    {
+        userColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        attemptsColumn.setCellValueFactory(new PropertyValueFactory<>("questionAttempts"));
+        feelTestData();
+        usersList.addListener((ListChangeListener) (c) -> updateTable());
+        //usersTable.setItems(usersList);
+
+    }
+    public void updateTable()
+    {
+        usersTable.setItems(usersList);
+    }
+
     public void realisationForGUI(UserState userState)
     {
         String input = answerArea.getText();
-        if (!input.equals("") && userState.name != null)
+        if (!input.equals("") && userState.getName() != null)
         {
             chatArea.appendText("\n[ВЫ]: " + input);
             var botAnswer = analyzeAnswer(userState, input);
-            //if (isChatting)
             for (var answer:botAnswer)
             {
                 if(answer != null)
@@ -219,6 +260,7 @@ public class ChatBot {
             userName = dialog.getDefaultValue();
 
         userState = new UserState(userName);
+        usersList.add(userState);
         chatArea.appendText("\n[БОТ]:" + getWelcomeMessage(userName));
         nameEnter.setDisable(true);
         nameEnter.setVisible(false);
