@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.input.KeyEvent;
+//import org.json.*
+//import org.json.simple.JSONObject;
+//import org.json.simple.parser.JSONParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +21,10 @@ public class ChatBot {
     static int attemptsCount = 2;
 
 	String getSkipMessage() {return "Пропускаем этот вопрос.";}
+//
+//	Question[] parseQuestions(){
+//
+//    }
 
     Question[] questions = {new Question("На озере расцвела одна лилия. " +
             "Каждый день число цветков удваивалось, и на двадцатый день все "
@@ -157,14 +163,10 @@ public class ChatBot {
         System.out.println("Как тебя зовут?");
         String userName = input.nextLine();
         UserState userState = new UserState(userName);
-        System.out.println(getWelcomeMessage(userName));  
-        String output = findKeys(userState, input.nextLine().toLowerCase());
-        if (output != null)
-        	System.out.println(output);
+        System.out.println(getWelcomeMessage(userName));
         int length = questions.length;
         while (userState.getQuestionNumber() < length)
         {
-            System.out.println(ask(userState));
             String answer = input.nextLine().toLowerCase();
             var botAnswer = analyzeAnswer(userState, answer);
             for (var bAnswer:botAnswer)
