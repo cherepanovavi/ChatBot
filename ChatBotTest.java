@@ -8,7 +8,7 @@ public class ChatBotTest {
 	@Test
 	void testGetEnding()
 	{
-		ChatBot chatBot = new ChatBot();
+		ChatBot chatBot = new ChatBot(Program.parseQuestions());
 		assertEquals(chatBot.getEnding(0), "ов");
 		assertEquals(chatBot.getEnding(5), "ов");
 		assertEquals(chatBot.getEnding(46), "ов");
@@ -24,7 +24,7 @@ public class ChatBotTest {
 	{
 		String name = "Фёдор";
 		UserState userState = new UserState(name);
-		ChatBot chatBot = new ChatBot();
+		ChatBot chatBot = new ChatBot(Program.parseQuestions());
 		assertEquals(chatBot.analyzeAnswer(userState, "Мне нужна помощь").get(0), chatBot.getHelp());
 		assertEquals(chatBot.analyzeAnswer(userState, "Справка").get(0), chatBot.getHelp());
 		assertEquals(chatBot.analyzeAnswer(userState, " -h").get(0), chatBot.getHelp());
@@ -37,7 +37,7 @@ public class ChatBotTest {
 	{
 		String name = "Фёдор";
 		UserState userState = new UserState(name);
-		ChatBot chatBot = new ChatBot();
+		ChatBot chatBot = new ChatBot(Program.parseQuestions());
 		assertEquals(chatBot.analyzeAnswer(userState, " ").get(0), chatBot.getSkipMessage());
 		assertEquals(userState.getQuestionNumber(), 0);
 		assertEquals(userState.getScore(), 0);
@@ -90,7 +90,7 @@ public class ChatBotTest {
 		{
 			String name = "Фёдор";
 			UserState userState = new UserState(name);
-			ChatBot chatBot = new ChatBot();
+			ChatBot chatBot = new ChatBot(Program.parseQuestions());
 			chatBot.analyzeAnswer(userState, "готов начать");
 			String answer = "этонеответ";
 			assertEquals(chatBot.analyzeAnswer(userState, answer).get(0), "Неправильный ответ, у тебя осталось 2 попытки");

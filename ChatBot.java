@@ -6,9 +6,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 //import org.json.*
 //import org.json.simple.JSONObject;
 //import org.json.simple.parser.JSONParser;
@@ -20,11 +19,18 @@ import java.util.Scanner;
 
 
 public class ChatBot {
+
+    private final Question[] questions;
+
+    ChatBot(Question[] questions)
+    {
+        this.questions = questions;
+    }
     private UserState userState;
     private ObservableList<UserState> usersList = FXCollections.observableArrayList();
     static int attemptsCount = 2;
 
-    void feelTestData()
+    private void feelTestData()
     {
         usersList.add(new UserState("Артем"));
         usersList.add(new UserState("Nikita"));
@@ -32,40 +38,7 @@ public class ChatBot {
     }
 
 	String getSkipMessage() {return "Пропускаем этот вопрос.";}
-//
-//	Question[] parseQuestions(){
-//
-//    }
 
-    Question[] questions = {new Question("На озере расцвела одна лилия. " +
-            "Каждый день число цветков удваивалось, и на двадцатый день все "
-            + "\nозеро покрылось цветами. На какой день покрылась цветами "
-            + "\nполовина озера?", Arrays.asList("19", "девятнадцать"), 1, "Если озеро полностью покрылось лилиями на 20-ый день," +
-            " то наполовину оно покроется на 19 день, ведь каждый день количество лилий увеличивается вдвое",
-            "\nОбратите внимание на то, во сколько раз увеличивается количество цветов  за день"),
-            new Question("Сколько тонн земли находится в яме размера 2x2x2 метра",
-                    Arrays.asList("0", "ноль"), 1, "Ответ конечно же 0, откуда в яме земля, её же выкопали",
-                    "\nВ ней будет столько же тонн земли, сколько и в яме 3х3х3"),
-            new Question("Введите следующий символ последовательности С О Н Д Я Ф М А",
-                    Arrays.asList("м", "май"), 1, "Ответ буква \"м\", потому что буквы обозначают месяцы:" +
-                    " Сентябрь, Октябрь и так далее до Апреля, а после Апреля идет Май",
-                    "\nНа самом деле букв в последовательности должно быть 12"),
-            new Question("Обогнав в спринте третьего бегуна на каком месте вы окажетесь",
-                    Arrays.asList("3", "третий", "третьем", "на третьем"), 1, "Вы будете на третьем месте," +
-                    " все же легко, просто представьте себя участником такого забега",
-                    "\nВы будете на золоте)"),
-            new Question("Малыш спрятал от Карлсона банку с вареньем в "
-                    + "\nодну из трех разноцветных коробок. На коробках"
-                    + "\nМалыш сделал надписи: на красной – «Здесь варенья нет»; "
-                    + "\nна синей – «Варенье - здесь»; на зеленой – "
-                    + "\n«Варенье в синей коробке». Только одна из надписей п"
-                    + "\nравдива. В какой коробке Малыш спрятал варенье?",
-                    Arrays.asList("в зеленой", "в зелёной", "зеленой",
-                            "зелёной", "зеленая", "зелёная"), 2, "Правильный ответ: в зелёной. Здесь работает простой метод исключения." +
-                    "\nВ синей быть не может,в этом случае нарушается условие единственности правдивой надписи, так как на зеленой написано, что варенье в синей. " +
-                    "\nВ то же время варенье не может быть и в красной, так как все надписи были бы лживы",
-                    "\nПочитайте внимательно и постарайтесь исключить неправильные варианты, в конце концов, их всего три, а у вас есть три попытки, думаю, у вас все получится)")
-    };
 
     private String ask(UserState userState)
     {
@@ -168,7 +141,7 @@ public class ChatBot {
         return String.format("Поздравляю, %s, ты набрал %d очк%s", userState.getName(), finalScore, getEnding(finalScore));
     }
 
-    public void consoleRealisation()
+    void consoleRealisation()
     {
         Scanner input = new Scanner(System.in);
         System.out.println("Как тебя зовут?");
@@ -225,12 +198,12 @@ public class ChatBot {
         //usersTable.setItems(usersList);
 
     }
-    public void updateTable()
+    private void updateTable()
     {
         usersTable.setItems(usersList);
     }
 
-    public void realisationForGUI(UserState userState)
+    private void realisationForGUI(UserState userState)
     {
         String input = answerArea.getText();
         if (!input.equals("") && userState.getName() != null)
