@@ -28,22 +28,14 @@ class Parser {
             obj = new JSONObject(s);
             JSONArray arr = obj.getJSONArray("base");
             for (int i = 0; i < arr.length(); i++) {
-                JSONObject question = arr.getJSONObject(i);
-
-                String q = question.getString("question");
-                List<String> answers = parseAnswersArray((question.getJSONArray("answers")));
-                int cost = question.getInt("cost");
-                String explanation = question.getString("explanation");
-                String hint = question.getString("hint");
-                questions.add(new Question(q, answers, cost, explanation, hint));
+                questions.add(parseQuestion(arr.getJSONObject(i)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println(questions.toArray(new Question[0]).length);
         return questions.toArray(new Question[0]);
     }
-    static List<String> parseAnswersArray(JSONArray arr){
+    private static List<String> parseAnswersArray(JSONArray arr){
         ArrayList<String> answers = new ArrayList<String>();
         for (int i = 0; i < arr.length(); i++)
         {
@@ -54,5 +46,20 @@ class Parser {
             }
         }
         return answers;
+    }
+
+    private static Question parseQuestion(JSONObject question)
+    {
+        try {
+        String q = question.getString("question");
+        List<String> answers = parseAnswersArray((question.getJSONArray("answers")));
+        int cost = question.getInt("cost");
+        String explanation = question.getString("explanation");
+        String hint = question.getString("hint");
+        return new Question(q, answers, cost, explanation, hint);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

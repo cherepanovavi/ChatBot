@@ -5,20 +5,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.json.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Program extends Application {
 	public static void main(String[] args)
     {
 		ChatBot chatBot = new ChatBot();
 //		System.out.println(parseQuestions());
-        chatBot.consoleRealisation();
+        //chatBot.consoleRealisation();
         launch(args);
     }
 

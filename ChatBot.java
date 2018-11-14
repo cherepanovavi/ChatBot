@@ -23,7 +23,7 @@ public class ChatBot {
     private final Question[] questions = Parser.parseQuestions();
     private UserState userState;
     private ObservableList<UserState> usersList = FXCollections.observableArrayList();
-    static int attemptsCount = 2;
+    static int attemptsCount = 3;
 
     private void feelTestData()
     {
@@ -84,9 +84,9 @@ public class ChatBot {
             userState.addScores(scores);
             userState.moveToNextQuestion();
         }
-        else if (userState.getQuestionAttempts() > 0)
+        else if (userState.getQuestionAttempts() > 1)
         {
-            output = String.format("Неправильный ответ, у тебя осталось %d попытки", userState.getQuestionAttempts());
+            output = String.format("Неправильный ответ, у тебя осталось %d попытки", userState.getQuestionAttempts() - 1);
             userState.spendAnAttempt();
         }
         else
