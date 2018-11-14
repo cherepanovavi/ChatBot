@@ -20,12 +20,7 @@ import java.util.Scanner;
 
 public class ChatBot {
 
-    private final Question[] questions;
-
-    ChatBot(Question[] questions)
-    {
-        this.questions = questions;
-    }
+    private final Question[] questions = Parser.parseQuestions();
     private UserState userState;
     private ObservableList<UserState> usersList = FXCollections.observableArrayList();
     static int attemptsCount = 2;
