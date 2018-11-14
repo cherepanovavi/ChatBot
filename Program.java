@@ -8,17 +8,14 @@ import javafx.stage.Stage;
 
 
 public class Program extends Application {
-	public static void main(String[] args)
-    {
-		ChatBot chatBot = new ChatBot();
-//		System.out.println(parseQuestions());
+    public static void main(String[] args) {
+        ChatBot chatBot = new ChatBot();
         //chatBot.consoleRealisation();
         launch(args);
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception
-    {
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Chat bot");
         primaryStage.setMinWidth(1161);
@@ -26,7 +23,6 @@ public class Program extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
-
 
 
 }

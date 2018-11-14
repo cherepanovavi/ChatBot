@@ -9,19 +9,18 @@ public class UserState {
     private int questionNumber;
     private SimpleIntegerProperty questionAttempts;
 
-    UserState(String username)
-    {
+    public UserState(String username) {
         this.score = new SimpleIntegerProperty(0);
         this.name = new SimpleStringProperty(username);
         this.questionNumber = -1;
         this.questionAttempts = new SimpleIntegerProperty(ChatBot.attemptsCount);
     }
-    void addScores(int newScores)
-    {
+
+    public void addScores(int newScores) {
         setScore(getScore() + newScores);
     }
-    int getQuestionNumber()
-    {
+
+    public int getQuestionNumber() {
         return questionNumber;
     }
 
@@ -61,9 +60,11 @@ public class UserState {
         return questionAttempts;
     }
 
-    void spendAnAttempt() {setQuestionAttempts(getQuestionAttempts() - 1);}
-    void moveToNextQuestion()
-    {
+    public void spendAnAttempt() {
+        setQuestionAttempts(getQuestionAttempts() - 1);
+    }
+
+    public void moveToNextQuestion() {
 
         questionNumber += 1;
         setQuestionAttempts(ChatBot.attemptsCount);
