@@ -15,13 +15,14 @@ import java.util.Optional;
 public class Controller {
     private ChatBot chatBot = new ChatBot();
     private UserState userState;
-    private ObservableList<UserState> usersList = FXCollections.observableArrayList();
+    private UsersBaseChanger usersBaseChanger = new UsersBaseChanger();
+    private ObservableList<UserState> usersList = usersBaseChanger.selectFromDataBase();
 
-    private void feelTestData() {
-        usersList.add(new UserState("Артем"));
-        usersList.add(new UserState("Nikita"));
-        usersList.add(new UserState("Gregory"));
-    }
+//    private void feelTestData() {
+//        usersList.add(new UserState("Артем"));
+//        usersList.add(new UserState("Nikita"));
+//        usersList.add(new UserState("Gregory"));
+//    }
 
     @FXML
     private TextArea chatArea;
@@ -52,7 +53,7 @@ public class Controller {
         userColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         attemptsColumn.setCellValueFactory(new PropertyValueFactory<>("questionAttempts"));
-        feelTestData();
+//        feelTestData();
         usersList.addListener((ListChangeListener) (c) -> updateTable());
         //usersTable.setItems(usersList);
 
@@ -73,8 +74,10 @@ public class Controller {
             }
         }
         answerArea.deleteText(0, input.length());
-        if (userState.getQuestionNumber() == chatBot.questions.length)
+        if (userState.getQuestionNumber() == chatBot.questions.length) {
+            usersBaseChanger.insertIntoDataBase(userState);
             chatArea.appendText("\n[БОТ]:" + chatBot.getSessionResult(userState));
+        }
     }
 
     public void showInputTextDialog() {
