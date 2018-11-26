@@ -1,7 +1,10 @@
-package Source;
+package Source.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import Source.LogicFiles.ChatBot;
+import Source.LogicFiles.UserState;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class UserStateTest {
@@ -21,7 +24,7 @@ class UserStateTest {
         int questNum = user.getQuestionNumber();
         user.moveToNextQuestion();
         assertEquals(user.getQuestionNumber(), questNum + 1);
-        assertEquals(user.getQuestionAttempts(), ChatBot.attemptsCount);
+        Assertions.assertEquals(user.getQuestionAttempts(), ChatBot.attemptsCount);
     }
 
     @Test

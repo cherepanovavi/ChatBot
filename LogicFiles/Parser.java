@@ -1,4 +1,4 @@
-package Source;
+package Source.LogicFiles;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class Parser {
+public class Parser {
     public static Question[] parseQuestions() {
-        ArrayList<Question> questions = new ArrayList<Question>();
+        List<Question> questions = new ArrayList<Question>();
         String s = "";
         Scanner in = null;
         try {
-            in = new Scanner(new File("C:\\Users\\chere\\OneDrive\\Desktop\\untitled\\src\\Source\\question_base"));
+            in = new Scanner(new File("Source/LogicFiles/question_base"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -1,22 +1,25 @@
-package Source;
+package Source.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import Source.LogicFiles.ChatBot;
+import Source.LogicFiles.EndingsChecker;
+import Source.LogicFiles.UserState;
 import org.junit.jupiter.api.Test;
 
 public class ChatBotTest {
 
     @Test
     public void testGetEnding() {
-        ChatBot chatBot = new ChatBot();
-        assertEquals(chatBot.getEnding(0), "ов");
-        assertEquals(chatBot.getEnding(5), "ов");
-        assertEquals(chatBot.getEnding(46), "ов");
-        assertEquals(chatBot.getEnding(21), "о");
-        assertEquals(chatBot.getEnding(1), "о");
-        assertEquals(chatBot.getEnding(22), "а");
-        assertEquals(chatBot.getEnding(3), "а");
-        assertEquals(chatBot.getEnding(104), "а");
+        EndingsChecker endingsChecker = new EndingsChecker();
+        assertEquals(endingsChecker.getEnding(0), "ов");
+        assertEquals(endingsChecker.getEnding(5), "ов");
+        assertEquals(endingsChecker.getEnding(46), "ов");
+        assertEquals(endingsChecker.getEnding(21), "о");
+        assertEquals(endingsChecker.getEnding(1), "о");
+        assertEquals(endingsChecker.getEnding(22), "а");
+        assertEquals(endingsChecker.getEnding(3), "а");
+        assertEquals(endingsChecker.getEnding(104), "а");
     }
 
     @Test
