@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 
-public class ChatBot {
+public class ChatBot{
 
     private final Question[] questions = Parser.parseQuestions();
     private UserState userState;
@@ -96,7 +96,7 @@ public class ChatBot {
                 "\nПока никаких фич у меня больше нет, простите";
     }
 
-    private String getWelcomeMessage(String userName) {
+    public String getWelcomeMessage(String userName) {
         return String.format("Привет, %s! Предлагаю тебе ответить на несколько каверзных вопросов" +
                         "\n Готов начать? Отправь любое сообщение" +
                         "\n Хочешь узнать больше информации отправь мне сообщение, содержащее слово \"справка\" "
