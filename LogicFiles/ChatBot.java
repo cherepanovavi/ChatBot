@@ -26,7 +26,8 @@ public class ChatBot{
         String checkKeysRes = findKeys(userState, answer);
         if (checkKeysRes != null)
             result.add(checkKeysRes);
-        else if (qN1 == -1) {
+        else if (qN1 == -1){
+            result.add(getWelcomeMessage(userState.getName()));
             userState.moveToNextQuestion();
         } else
             result.add(checkAnswer(userState, answer));
@@ -37,12 +38,12 @@ public class ChatBot{
     }
 
     private String findKeys(UserState userState, String answer) {
-        if (answer.contains("помощь") || answer.contains("справка") || answer.contains("?")
+        if (answer.contains("помощь") || answer.contains("справк") || answer.contains("?")
                 || answer.contains("-h"))
             return getHelp();
-        if (answer.equals(" ") || answer.contains("пропустить") || answer.contains("следующий"))
+        if (answer.contains("пропустить") || answer.contains("следующий"))
             return skipQuestion(userState);
-        if (answer.equals("подсказка") || answer.equals("hint"))
+        if (answer.contains("подсказк") || answer.contains("hint"))
             return questions[userState.getQuestionNumber()].getHint();
         return null;
     }
@@ -57,11 +58,12 @@ public class ChatBot{
             userState.addScores(scores);
             userState.moveToNextQuestion();
         } else if (userState.getQuestionAttempts() > 1) {
-            output = String.format("Неправильный ответ, у тебя осталось %d попытки", userState.getQuestionAttempts() - 1);
+            output = String.format("Неправильный ответ, у тебя осталось %d попытки. \nНужна подсказка? Отправь мне \"подсказка\"", userState.getQuestionAttempts() - 1);
             userState.spendAnAttempt();
         } else {
-            output = String.format("У тебя закончились попытки. \n%s \nПереходим к следующему вопросу",
-                    questions[questionNumber].getExplanation());
+            String next = (userState.getQuestionNumber() < questions.length - 1) ? "\nПереходим к следующему вопросу" : "";
+            output = String.format("У тебя закончились попытки. \n%s %s",
+                    questions[questionNumber].getExplanation(), next);
             userState.moveToNextQuestion();
         }
         return output;
