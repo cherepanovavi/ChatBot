@@ -1,8 +1,8 @@
-package Source;
+package Source.LogicFiles;
 
 import java.util.List;
 
-class Question {
+public class Question {
     private final String question;
     private final List<String> answers;
     private final int cost;

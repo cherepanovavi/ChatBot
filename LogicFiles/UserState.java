@@ -1,4 +1,4 @@
-package Source;
+package Source.LogicFiles;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,10 +26,6 @@ public class UserState {
 
     public void setScore(int score) {
         this.score.set(score);
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
     }
 
     public void setQuestionAttempts(int questionAttempts) {
