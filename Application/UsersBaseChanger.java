@@ -22,8 +22,7 @@ public class UsersBaseChanger {
     private static Statement stmt;
     private static ResultSet rs;
 
-    public ObservableList<UserState> selectFromDataBase()
-    {
+    public ObservableList<UserState> selectFromDataBase() {
         ObservableList<UserState> usersList = FXCollections.observableArrayList();
         String query = "select username, score, attempts_on_question from users_results";
         try {

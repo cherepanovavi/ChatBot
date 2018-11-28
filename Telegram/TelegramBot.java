@@ -39,19 +39,19 @@ public class TelegramBot extends TelegramLongPollingBot{
         UserState user =  new UserState(userName);
         users.replace(id, user);
     }
-
+// TODO использовать Concurrent HashMap
     private UserState getUser(Message msg) {
         Long id =msg.getChatId();
         String userName = getUserName(msg);
         if (!users.keySet().contains(id)){
             UserState user =  new UserState(userName);
-            users.put(id,user);
+            users.put(id, user);
             return user;
         }
         return users.get(id);
 
     }
-
+// TODO доработать код
     private String getUserName(Message msg){
         var chat = msg.getChat();
         String firstName = chat.getFirstName();
