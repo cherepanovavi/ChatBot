@@ -8,27 +8,25 @@ import java.sql.*;
 
 public class UsersBaseChanger {
 
-    private static final String url = "jdbc:mysql://localhost:3306/usersbase"+
+    private final String url = "jdbc:mysql://localhost:3306/usersbase"+
             "?verifyServerCertificate=false"+
             "&useSSL=false"+
             "&requireSSL=false"+
             "&useLegacyDatetimeCode=false"+
             "&amp"+
             "&serverTimezone=UTC";
-    private static final String user = "root";
-    private static final String password = "DeniskinBeast2018";
+    private final String user = "root";
+    private final String password = "DeniskinBeast2018";
 
-    private static Connection con;
-    private static Statement stmt;
-    private static ResultSet rs;
+    private Connection con;
 
     public ObservableList<UserState> selectFromDataBase() {
         ObservableList<UserState> usersList = FXCollections.observableArrayList();
         String query = "select username, score, attempts_on_question from users_results";
         try {
             con = DriverManager.getConnection(url, user, password);
-            stmt = con.createStatement();
-            rs = stmt.executeQuery(query);
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next())
             {
@@ -42,13 +40,18 @@ public class UsersBaseChanger {
 
                 usersList.add(userState);
             }
+            try { stmt.close(); } catch(SQLException se) {
+                System.out.println("can't close the Statement");
+            }
+            try { rs.close(); } catch(SQLException se) {
+                System.out.println("can't close the ResultSet");
+            }
         }
         catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         } finally {
-            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
-            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
-            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { con.close(); } catch(SQLException se) {
+                System.out.println("can't close the connection");}
         }
         return usersList;
     }
@@ -64,13 +67,16 @@ public class UsersBaseChanger {
             ps.setInt(3, userState.getQuestionAttempts());
 
             ps.executeUpdate();
-
+            try { ps.close(); } catch(SQLException se) {
+                System.out.println("can't close the PreparedStatement");
+            }
             }
         catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         } finally {
-            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
-            try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { con.close(); } catch(SQLException se) {
+                System.out.println("can't close the Connection");
+            }
         }
     }
 }

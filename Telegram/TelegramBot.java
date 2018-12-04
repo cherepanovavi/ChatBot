@@ -2,6 +2,7 @@ package Source.Telegram;
 
 import Source.LogicFiles.ChatBot;
 import Source.LogicFiles.UserState;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -11,11 +12,18 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.*;
 
 public class TelegramBot extends TelegramLongPollingBot{
-    private String token = "674868490:AAHQzYxarifgBHFDrSIhPsmcwaEAkWIxtt0";
-    private String botName = "logic_tasks_bot";
-    private ChatBot chatBot = new ChatBot();
-    private Map<Long, UserState> users = new HashMap<Long, UserState>();
+    private String token;
+    private String botName;
+    private ChatBot chatBot;
+    private Map<Long, UserState> users;
 
+    protected TelegramBot(DefaultBotOptions botOptions){
+        super(botOptions);
+        this.token = "674868490:AAHQzYxarifgBHFDrSIhPsmcwaEAkWIxtt0";
+        this.botName = "logic_tasks_bot";
+        this.chatBot = new ChatBot();
+        this.users = new HashMap<Long, UserState>();
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
