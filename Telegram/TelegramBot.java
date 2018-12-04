@@ -72,7 +72,7 @@ public class TelegramBot extends TelegramLongPollingBot{
             res = firstName + " " + lastName;
         else
             return userName;
-        if ("".equals(res))
+        if (" ".equals(res))
             return "User";
         return res.substring(0, res.length() - 1);
     }

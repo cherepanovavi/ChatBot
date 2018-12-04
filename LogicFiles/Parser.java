@@ -16,7 +16,7 @@ public class Parser {
         String s = "";
         Scanner in = null;
         try {
-            in = new Scanner(new File("Source/LogicFiles/question_base"));
+            in = new Scanner(new File("src/Source/LogicFiles/question_base"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
