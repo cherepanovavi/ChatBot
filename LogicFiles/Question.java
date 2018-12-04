@@ -60,7 +60,7 @@ public class Question {
             else if ((page.charAt(index)== '<' || page.charAt(index)=='&') && index != 0)
                 result.append(page.substring(previous_index + 1, index));
         }
-        return String.valueOf(result +"\n"+ link);
+        return String.valueOf("<i>" + result + "</i>" +"\n"+ "<a href= \"" + link + "\"> Читать далее</a>");
 
     }
 
@@ -78,7 +78,6 @@ public class Question {
                     started = true;
                 if (started)
                     result.append(line);
-//                System.out.println(line);
                 if(line.contains("</p"))
                     break;
             }

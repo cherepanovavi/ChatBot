@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TelegramBot extends TelegramLongPollingBot{
     private String token;
@@ -22,7 +23,7 @@ public class TelegramBot extends TelegramLongPollingBot{
         this.token = "674868490:AAHQzYxarifgBHFDrSIhPsmcwaEAkWIxtt0";
         this.botName = "logic_tasks_bot";
         this.chatBot = new ChatBot();
-        this.users = new HashMap<Long, UserState>();
+        this.users = new ConcurrentHashMap<Long, UserState>();
     }
 
     @Override
@@ -81,6 +82,7 @@ public class TelegramBot extends TelegramLongPollingBot{
         SendMessage s = new SendMessage();
         s.setChatId(msg.getChatId()); // Боту может писать не один человек, и поэтому чтобы отправить сообщение, грубо говоря нужно узнать куда его отправлять
         s.setText(text);
+        s.setParseMode("HTML");
         try { //Чтобы не крашнулась программа при вылете Exception
             execute(s);
         } catch (TelegramApiException e){
