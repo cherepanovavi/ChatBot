@@ -39,14 +39,13 @@ public class ChatBotTest {
         String name = "Фёдор";
         UserState userState = new UserState(name);
         ChatBot chatBot = new ChatBot();
-        assertEquals(chatBot.analyzeAnswer(userState, " ").get(0), chatBot.getSkipMessage());
-        assertEquals(userState.getQuestionNumber(), 0);
+        assertEquals(userState.getQuestionNumber(), -1);
         assertEquals(userState.getScore(), 0);
         assertEquals(chatBot.analyzeAnswer(userState, "Хочу пропустить").get(0), chatBot.getSkipMessage());
-        assertEquals(userState.getQuestionNumber(), 1);
+        assertEquals(userState.getQuestionNumber(), 0);
         assertEquals(userState.getScore(), 0);
         assertEquals(chatBot.analyzeAnswer(userState, "следующий вопрос").get(0), chatBot.getSkipMessage());
-        assertEquals(userState.getQuestionNumber(), 2);
+        assertEquals(userState.getQuestionNumber(), 1);
         assertEquals(userState.getScore(), 0);
     }
 
@@ -57,7 +56,8 @@ public class ChatBotTest {
         ChatBot chatBot = new ChatBot();
         chatBot.analyzeAnswer(userState, "готов начать");
         String answer = "этонеответ";
-        assertEquals(chatBot.analyzeAnswer(userState, answer).get(0), "Неправильный ответ, у тебя осталось 2 попытки");
+        assertEquals(chatBot.analyzeAnswer(userState, answer).get(0), "Неправильный ответ, у тебя осталось 2 попытки. " +
+                "\nНужна подсказка? Отправь мне \"подсказка\"");
         assertEquals(userState.getScore(), 0);
         assertEquals(userState.getQuestionNumber(), 0);
         assertEquals(userState.getQuestionAttempts(), 2);
