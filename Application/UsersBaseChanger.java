@@ -56,8 +56,7 @@ public class UsersBaseChanger {
         return usersList;
     }
 
-    public void insertIntoDataBase(UserState userState)
-    {
+    public void insertIntoDataBase(UserState userState) {
         String query = "insert into users_results (username, score, attempts_on_question) values (?, ?, ?)";
         try {
             con = DriverManager.getConnection(url, user, password);
