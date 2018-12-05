@@ -14,14 +14,14 @@ import java.io.File;
 public class ParserTest {
     @Test
     public void testGetOnlyFirstParagraph() {
-        String page = Parser.readFromFile(new File("src/Source/Tests/HTML_test.txt"));
-        String result = Parser.readFromFile(new File("src/Source/Tests/HTML_test_paragraph.txt"));
+        String page = Parser.readFromFile(new File("Source/Tests/HTML_test.txt"));
+        String result = Parser.readFromFile(new File("Source/Tests/HTML_test_paragraph.txt"));
         assertEquals(Parser.getOnlyFirstParagraph(page), result);
     }
     @Test
     public void testParseFirstParagraph() {
-        String paragraph = Parser.readFromFile(new File("src/Source/Tests/HTML_test_paragraph.txt"));
-        String result = Parser.readFromFile(new File("src/Source/Tests/HTML_test_result.txt"));
+        String paragraph = Parser.readFromFile(new File("Source/Tests/HTML_test_paragraph.txt"));
+        String result = Parser.readFromFile(new File("Source/Tests/HTML_test_result.txt"));
         assertEquals(Parser.parseParagraph(paragraph), result);
     }
 
