@@ -32,19 +32,18 @@ public class Parser {
     }
 
     public static String readFromFile(File file) {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         Scanner in = null;
         try {
             in = new Scanner(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert in != null;
         while (in.hasNext())
-            s += in.nextLine() + "\r\n";
+            s.append(in.nextLine()).append("\r\n");
         in.close();
-        return s;
-
-
+        return s.substring(0, s.length()-2);
     }
 
     private static List<String> parseAnswersArray(JSONArray arr) {
@@ -85,22 +84,28 @@ public class Parser {
         Matcher matcher = pattern.matcher(paragraph);
         Integer index;
         Integer previous_index = 0;
+        char previous_symbol = 0;
+        char symbol;
         while (matcher.find()) {
             index = matcher.start();
-            char symbol = paragraph.charAt(index);
-            if (symbol == '<' && index!=0)
-                result.append(paragraph.substring(previous_index+1, index));
-//            else if(symbol == '&')
-//                result.append(" "+ paragraph.substring(previous_index+1, index));
+            symbol = paragraph.charAt(index);
+            if (symbol == '<' && index!=0 || symbol == '&'){
+                String newString = paragraph.substring(previous_index+1, index);
+                if (previous_symbol == ';')
+                    result.append(" "+newString);
+                else
+                    result.append(newString);
+            }
             else if(symbol == '>' || symbol ==';')
                 previous_index = index;
+                previous_symbol = symbol;
         }
         return String.valueOf(result);
     }
 
     public static String getOnlyFirstParagraph(String page) {
         StringBuilder result = new StringBuilder();
-        Pattern pattern = Pattern.compile("p>");
+        Pattern pattern = Pattern.compile("<(/)?p>");
         Matcher matcher = pattern.matcher(page);
         Integer index;
         Integer previous_index = 0;
