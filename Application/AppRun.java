@@ -13,7 +13,7 @@ public class AppRun extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("fxmlFiles/sample.fxml"));
         primaryStage.setTitle("Chat bot");
         primaryStage.setMinWidth(1161);
         primaryStage.setMinHeight(500);

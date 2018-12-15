@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="800.0" maxWidth="600.0" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Source.Application.Controllers.AdminWinController">
+   <children>
+      <TextArea fx:id="editionArea" prefHeight="750.0" prefWidth="600.0" />
+      <Button layoutX="-1.0" layoutY="751.0" mnemonicParsing="false" onAction="#saveChanges" prefHeight="48.0" prefWidth="105.0" text="Сохранить" />
+      <Button layoutX="102.0" layoutY="750.0" mnemonicParsing="false" onAction="#saveChangesAndPush" prefHeight="48.0" prefWidth="184.0" text="Сохранить и запушить" />
+      <Label fx:id="changesLabel" layoutX="300.0" layoutY="764.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

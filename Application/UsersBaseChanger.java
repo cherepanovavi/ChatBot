@@ -11,6 +11,7 @@ public class UsersBaseChanger {
     private final String url = "jdbc:mysql://localhost:3306/usersbase" +
             "?verifyServerCertificate=false" +
             "&useSSL=false" +
+            "&allowPublicKeyRetrieval=true" +
             "&requireSSL=false" +
             "&useLegacyDatetimeCode=false" +
             "&amp" +
