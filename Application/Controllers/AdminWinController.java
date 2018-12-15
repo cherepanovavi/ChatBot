@@ -64,7 +64,7 @@ public class AdminWinController {
     {
         try
         {
-            Process proc = Runtime.getRuntime().exec("cmd pushToGit.bat");
+            Process proc = Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd source && git push origin telegram\"");
             proc.waitFor();
             proc.destroy();
         }
@@ -86,5 +86,6 @@ public class AdminWinController {
     public void saveChangesAndPush(ActionEvent actionEvent) {
         reWriteJSONFile();
         pushToGit();
+        changesLabel.setText("Изменения сохранены и запушены");
     }
 }
