@@ -64,7 +64,8 @@ public class AdminWinController {
     {
         try
         {
-            Process proc = Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd source && git push origin telegram\"");
+            var command = "cmd /c start cmd.exe /K \"cd source && git add LogicFiles/question_base && git commit -m \"База вопросов изменена администратором\" && git push origin telegram\"";
+            Process proc = Runtime.getRuntime().exec(command);
             proc.waitFor();
             proc.destroy();
         }

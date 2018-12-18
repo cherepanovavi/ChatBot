@@ -30,8 +30,9 @@ public class Question {
     }
 
     public String getExplanation() {
-        if (explanation.contains("://")) {
-            return Parser.parseFromHTML(explanation);
+        if (explanation.charAt(0) == '?') {
+            return Parser.getExplanation(explanation.substring(1));
+//            return Parser.parseFromHTML(explanation);
         }
         return explanation;
     }

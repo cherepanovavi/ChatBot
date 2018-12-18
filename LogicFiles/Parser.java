@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.regex.Pattern;
 public class Parser {
     public static Question[] parseQuestions() {
         List<Question> questions = new ArrayList<Question>();
-        String s = readFromFile(new File("Source/LogicFiles/question_base"));
+        String s = readFromFile(new File("src/Source/LogicFiles/question_base"));
         JSONObject obj = null;
         try {
             obj = new JSONObject(s);
@@ -43,7 +42,7 @@ public class Parser {
         while (in.hasNext())
             s.append(in.nextLine()).append("\r\n");
         in.close();
-        return s.substring(0, s.length()-2);
+        return s.substring(0, s.length() - 2);
     }
 
     private static List<String> parseAnswersArray(JSONArray arr) {
@@ -72,6 +71,55 @@ public class Parser {
         }
     }
 
+    private static String getPageID(String s)
+    {
+        String pageId = null;
+        JSONObject obj = null;
+        try
+        {
+            obj = new JSONObject(s);
+            JSONObject query = obj.getJSONObject("query");
+            JSONArray search = query.getJSONArray("search");
+            JSONObject r = search.getJSONObject(0);
+            pageId = String.valueOf(r.getInt("pageid"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return pageId;
+    }
+
+    private static String getFullURL(String id)
+    {
+        String fullURL = null;
+        String URL = String.format("https://ru.wikipedia.org/w/api.php?action=query&prop=info&inprop=url&format=json&pageids=%s", id);
+        String s = downloadPage(URL);
+        try
+        {
+            JSONObject obj = new JSONObject(s);
+            JSONObject query = obj.getJSONObject("query");
+            JSONObject pages = query.getJSONObject("pages");
+            JSONObject r = pages.getJSONObject(id);
+            fullURL = r.getString("fullurl");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return fullURL;
+    }
+
+    public static String getExplanation(String searchRequest){
+        String page = getPage(searchRequest);
+        return  parseFromHTML(page);
+    }
+
+    public static String getPage(String searchRequest){
+        String URL = String.format("https://ru.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=%s", searchRequest);
+        String searchResult = downloadPage(URL);
+        String pageID = getPageID(searchResult);
+        return getFullURL(pageID);
+    }
+
     public static String parseFromHTML(String link) {
         String page = downloadPage(link);
         String paragraph = getOnlyFirstParagraph(page);
@@ -89,16 +137,15 @@ public class Parser {
         while (matcher.find()) {
             index = matcher.start();
             symbol = paragraph.charAt(index);
-            if (symbol == '<' && index!=0 || symbol == '&'){
-                String newString = paragraph.substring(previous_index+1, index);
+            if (symbol == '<' && index != 0 || symbol == '&') {
+                String newString = paragraph.substring(previous_index + 1, index);
                 if (previous_symbol == ';')
-                    result.append(" "+newString);
+                    result.append(" " + newString);
                 else
                     result.append(newString);
-            }
-            else if(symbol == '>' || symbol ==';')
+            } else if (symbol == '>' || symbol == ';')
                 previous_index = index;
-                previous_symbol = symbol;
+            previous_symbol = symbol;
         }
         return String.valueOf(result);
     }
@@ -134,5 +181,4 @@ public class Parser {
         }
         return " ";
     }
-
 }
