@@ -28,7 +28,7 @@
                     <assembleDirectory>target</assembleDirectory>
                     <programs>
                         <program>
-                            <mainClass>Source/Telegram/TelegramBotRun</mainClass>
+                            <mainClass>Source.Telegram.TelegramBotRun</mainClass>
                             <name>logicTasksBot</name>
                         </program>
                     </programs>
