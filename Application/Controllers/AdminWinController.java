@@ -27,7 +27,7 @@ public class AdminWinController {
 
     private String readJSONFile()
     {
-        try(BufferedReader br = new BufferedReader(new FileReader("Source/LogicFiles/question_base")))
+        try(BufferedReader br = new BufferedReader(new FileReader("src/Source/LogicFiles/question_base")))
         {
             StringBuilder stringBuilder = new StringBuilder();
             String line = br.readLine();
@@ -48,7 +48,7 @@ public class AdminWinController {
 
     private void reWriteJSONFile()
     {
-        try (FileWriter writer = new FileWriter("Source/LogicFiles/question_base"))
+        try (FileWriter writer = new FileWriter("src/Source/LogicFiles/question_base"))
         {
             String text = editionArea.getText();
             writer.write(text);
@@ -62,9 +62,10 @@ public class AdminWinController {
 
     private void pushToGit()
     {
+        var command = "cmd /c start cmd.exe /K \"cd source && git add LogicFiles/question_base && git commit -m \"База вопросов изменена администратором\" && git push origin telegram\"";
         try
         {
-            Process proc = Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd source && git push origin telegram\"");
+            Process proc = Runtime.getRuntime().exec(command);
             proc.waitFor();
             proc.destroy();
         }

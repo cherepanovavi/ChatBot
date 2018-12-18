@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class Parser {
     public static Question[] parseQuestions() {
         List<Question> questions = new ArrayList<Question>();
-        String s = readFromFile(new File("Source/LogicFiles/question_base"));
+        String s = readFromFile(new File("src/Source/LogicFiles/question_base"));
         JSONObject obj = null;
         try {
             obj = new JSONObject(s);
