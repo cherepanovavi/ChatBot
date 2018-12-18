@@ -5,14 +5,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class Parser {
     public static Question[] parseQuestions() {
@@ -43,7 +44,7 @@ public class Parser {
         while (in.hasNext())
             s.append(in.nextLine()).append("\r\n");
         in.close();
-        return s.substring(0, s.length()-2);
+        return s.substring(0, s.length() - 2);
     }
 
     private static List<String> parseAnswersArray(JSONArray arr) {
@@ -72,49 +73,79 @@ public class Parser {
         }
     }
 
-    public static String parseFromHTML(String link) {
-        String page = downloadPage(link);
-        String paragraph = getOnlyFirstParagraph(page);
-        return String.valueOf("<i>" + parseParagraph(paragraph) + "</i>" + "\n" + "<a href= \"" + link + "\"> Читать далее</a>");
-    }
+    private static String getPageID(String s)
+    {
+        String pageId = null;
+        JSONObject obj = null;
+        try
+        {
+            obj = new JSONObject(s);
+            JSONObject query = obj.getJSONObject("query");
+            JSONArray search = query.getJSONArray("search");
+            JSONObject r = search.getJSONObject(0);
+            pageId = String.valueOf(r.getInt("pageid"));
 
-    public static String parseParagraph(String paragraph) {
-        StringBuilder result = new StringBuilder();
-        Pattern pattern = Pattern.compile("[<>&;]");
-        Matcher matcher = pattern.matcher(paragraph);
-        Integer index;
-        Integer previous_index = 0;
-        char previous_symbol = 0;
-        char symbol;
-        while (matcher.find()) {
-            index = matcher.start();
-            symbol = paragraph.charAt(index);
-            if (symbol == '<' && index!=0 || symbol == '&'){
-                String newString = paragraph.substring(previous_index+1, index);
-                if (previous_symbol == ';')
-                    result.append(" "+newString);
-                else
-                    result.append(newString);
-            }
-            else if(symbol == '>' || symbol ==';')
-                previous_index = index;
-                previous_symbol = symbol;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        return String.valueOf(result);
+        return pageId;
     }
 
-    public static String getOnlyFirstParagraph(String page) {
-        StringBuilder result = new StringBuilder();
-        Pattern pattern = Pattern.compile("<(/)?p>");
-        Matcher matcher = pattern.matcher(page);
-        Integer index;
-        Integer previous_index = 0;
-        matcher.find();
-        int beg_index = matcher.end();
-        matcher.find();
-        int end_index = matcher.start();
-        return page.substring(beg_index, end_index-2);
+    private static String getFullURL(String id)
+    {
+        String fullURL = null;
+        String URL = String.format("https://ru.wikipedia.org/w/api.php?action=query&prop=info&inprop=url&format=json&pageids=%s", id);
+        String s = downloadPage(URL);
+        try
+        {
+            JSONObject obj = new JSONObject(s);
+            JSONObject query = obj.getJSONObject("query");
+            JSONObject pages = query.getJSONObject("pages");
+            JSONObject r = pages.getJSONObject(id);
+            fullURL = r.getString("fullurl");
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return fullURL;
+    }
+
+    public static String getWikiSearchResult(String searchRequest){
+        String page = getPage(searchRequest);
+        return  parseFromHTML(page);
+    }
+
+    public static String getWikiSearchResultForTelegram(String searchRequest){
+        String page = getPage(searchRequest);
+        return  parseAndDecorate(page);
+    }
+    private static String getPage(String searchRequest){
+        String URL = String.format("https://ru.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=%s", searchRequest);
+        String searchResult = downloadPage(URL);
+        String pageID = getPageID(searchResult);
+        return getFullURL(pageID);
+    }
+
+    private static String parseAndDecorate(String link){
+        String result = parseFromHTML(link);
+        return "<i>" + result + "</i>" + "\n" + "<a href= \"" + link + "\"> Читать далее</a>";
+    }
+
+    private static String parseFromHTML(String link){
+        String result = null;
+        try {
+            Document doc = Jsoup.connect(link).get();
+            Elements paragraphs = doc.select("p");
+            result = "";
+            for(Element p : paragraphs)
+                if (result.equals(""))
+                    result += p.text();
+                else
+                    break;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return result;
     }
 
     private static String downloadPage(String link) {
@@ -134,5 +165,4 @@ public class Parser {
         }
         return " ";
     }
-
 }

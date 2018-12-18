@@ -52,7 +52,7 @@ public class TelegramBot extends TelegramLongPollingBot{
     private UserState getUser(Message msg) {
         Long id = msg.getChatId();
         String userName = getUserName(msg);
-        return users.computeIfAbsent(id, f -> (new UserState(userName)));
+        return  users.computeIfAbsent(id, f -> (new UserState(userName)));
     }
 
     private String getUserName(Message msg){
