@@ -1,8 +1,7 @@
 package Source.Application.Controllers;
 
 import Source.Application.UsersBaseChanger;
-import Source.LogicFiles.ChatBot;
-import Source.LogicFiles.UserState;
+import Source.LogicFiles.*;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,8 +18,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Optional;
 
-public class Controller {
-    private ChatBot chatBot = new ChatBot();
+public class Controller implements ISender{
+    private ChatBot chatBot = new ChatBot( new InitializingManager(this, 120000));
     private UserState userState;
     private UsersBaseChanger usersBaseChanger = new UsersBaseChanger();
     private ObservableList<UserState> usersList = usersBaseChanger.selectFromDataBase();
@@ -81,6 +80,7 @@ public class Controller {
         if (userState.getQuestionNumber() == chatBot.questions.length) {
             usersBaseChanger.insertIntoDataBase(userState);
             chatArea.appendText("\n[БОТ]:" + chatBot.getSessionResult(userState));
+            userState.restart();
         }
     }
 
@@ -127,5 +127,10 @@ public class Controller {
         catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void sendMessage(UserState userState, String message) {
+        chatArea.appendText("\n[БОТ]:" + message);
     }
 }

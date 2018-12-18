@@ -2,7 +2,7 @@ package Source.LogicFiles;
 
 public class EndingsChecker {
 
-    public String getEnding(int score) {
+    public static String getEnding(int score) {
         int modScore = score % 10;
         if (modScore == 1)
             return "о";

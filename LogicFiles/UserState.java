@@ -8,12 +8,29 @@ public class UserState {
     private SimpleStringProperty name;
     private int questionNumber;
     private SimpleIntegerProperty questionAttempts;
+    private Long id;
 
     public UserState(String username) {
         this.score = new SimpleIntegerProperty(0);
         this.name = new SimpleStringProperty(username);
         this.questionNumber = -1;
         this.questionAttempts = new SimpleIntegerProperty(ChatBot.attemptsCount);
+    }
+
+    public UserState(String username, Long id){
+        this.id = id;
+        this.score = new SimpleIntegerProperty(0);
+        this.name = new SimpleStringProperty(username);
+        this.questionNumber = -1;
+        this.questionAttempts = new SimpleIntegerProperty(ChatBot.attemptsCount);
+    }
+
+    public Long getId(){return id;}
+
+    public void restart(){
+        score = new SimpleIntegerProperty(0);
+        questionNumber = -1;
+        questionAttempts = new SimpleIntegerProperty(ChatBot.attemptsCount);
     }
 
     public void addScores(int newScores) {

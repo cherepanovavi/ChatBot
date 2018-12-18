@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -73,12 +74,10 @@ public class Parser {
         }
     }
 
-    private static String getPageID(String s)
-    {
+    private static String getPageID(String s) {
         String pageId = null;
         JSONObject obj = null;
-        try
-        {
+        try {
             obj = new JSONObject(s);
             JSONObject query = obj.getJSONObject("query");
             JSONArray search = query.getJSONArray("search");
@@ -91,13 +90,11 @@ public class Parser {
         return pageId;
     }
 
-    private static String getFullURL(String id)
-    {
+    private static String getFullURL(String id) {
         String fullURL = null;
         String URL = String.format("https://ru.wikipedia.org/w/api.php?action=query&prop=info&inprop=url&format=json&pageids=%s", id);
         String s = downloadPage(URL);
-        try
-        {
+        try {
             JSONObject obj = new JSONObject(s);
             JSONObject query = obj.getJSONObject("query");
             JSONObject pages = query.getJSONObject("pages");
@@ -110,34 +107,36 @@ public class Parser {
         return fullURL;
     }
 
-    public static String getWikiSearchResult(String searchRequest){
+    public static String getWikiSearchResult(String searchRequest) {
         String page = getPage(searchRequest);
-        return  parseFromHTML(page);
+        return parseFromHTML(page);
     }
 
-    public static String getWikiSearchResultForTelegram(String searchRequest){
-        String page = getPage(searchRequest);
-        return  parseAndDecorate(page);
-    }
-    private static String getPage(String searchRequest){
+
+    private static String getPage(String searchRequest) {
         String URL = String.format("https://ru.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=%s", searchRequest);
         String searchResult = downloadPage(URL);
         String pageID = getPageID(searchResult);
         return getFullURL(pageID);
     }
 
-    private static String parseAndDecorate(String link){
-        String result = parseFromHTML(link);
-        return "<i>" + result + "</i>" + "\n" + "<a href= \"" + link + "\"> Читать далее</a>";
+    public static String decorate(String text) {
+        int a = text.indexOf('.');
+        int i = text.indexOf("https://");
+        int j = text.indexOf("Переходим");
+        if (i == -1)
+            return text;
+        String result = String.format("%s<i>%s</i>\n<a href= \"%s\"> Читать далее</a>\n%s", text.substring(0, a), text.substring(a+1, i - 1), text.substring(i, j-1), text.substring(j));
+        return result;
     }
 
-    private static String parseFromHTML(String link){
+    private static String parseFromHTML(String link) {
         String result = null;
         try {
             Document doc = Jsoup.connect(link).get();
             Elements paragraphs = doc.select("p");
             result = "";
-            for(Element p : paragraphs)
+            for (Element p : paragraphs)
                 if (result.equals(""))
                     result += p.text();
                 else
@@ -145,7 +144,7 @@ public class Parser {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return result;
+        return result + " " + link;
     }
 
     private static String downloadPage(String link) {

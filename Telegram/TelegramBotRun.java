@@ -16,9 +16,9 @@ public class TelegramBotRun {
             TelegramBotsApi botapi = new TelegramBotsApi();
 
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
-            botOptions.setProxyHost(proxyHost);
-            botOptions.setProxyPort(proxyPort);
-            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+            //botOptions.setProxyHost(proxyHost);
+//            botOptions.setProxyPort(proxyPort);
+//            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
 
             botapi.registerBot(new TelegramBot(botOptions));
 

@@ -6,11 +6,20 @@ import java.util.List;
 
 public class ChatBot{
 
+    private InitializingManager manager;
+
     public final Question[] questions = Parser.parseQuestions();
     public static int attemptsCount = 3;
 
     public String getSkipMessage() {
         return "Пропускаем этот вопрос.";
+    }
+
+    public ChatBot(){
+
+    }
+    public ChatBot(InitializingManager manager){
+        this.manager = manager;
     }
 
 
@@ -45,6 +54,14 @@ public class ChatBot{
             return skipQuestion(userState);
         if (answer.contains("подсказк") || answer.contains("hint"))
             return questions[userState.getQuestionNumber()].getHint();
+        if (answer.contains("отписаться")||answer.contains("отписка")) {
+            manager.deleteUserState(userState);
+            return("Простите, больше не будем вас беспокоить");
+        }
+        if (answer.contains("подписаться")||answer.contains("подписка")) {
+            manager.addUserState(userState);
+            return("Скоро увидимся:)");
+        }
         return null;
     }
 
@@ -89,8 +106,8 @@ public class ChatBot{
 
     public String getSessionResult(UserState userState) {
         int finalScore = userState.getScore();
-        EndingsChecker endingsChecker = new EndingsChecker();
-        return String.format("Поздравляю, %s, ты набрал %d очк%s",
-                userState.getName(), finalScore, endingsChecker.getEnding(finalScore));
+        return String.format("Поздравляю, %s, ты набрал %d очк%s! Хочешь, чтобы мы напомнили тебе об игре?" +
+                        "\n Отправь сообщение, содержащее слово \"подписка\".",
+                userState.getName(), finalScore, EndingsChecker.getEnding(finalScore));
     }
 }
