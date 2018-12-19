@@ -2,13 +2,8 @@ package Source.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import Source.LogicFiles.ChatBot;
-import Source.LogicFiles.EndingsChecker;
 import Source.LogicFiles.Parser;
-import Source.LogicFiles.UserState;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 
 public class ParserTest {
