@@ -21,7 +21,7 @@ public class TelegramBot extends TelegramLongPollingBot implements ISender {
         super(botOptions);
         this.token = "674868490:AAHQzYxarifgBHFDrSIhPsmcwaEAkWIxtt0";
         this.botName = "logic_tasks_bot";
-        this.chatBot = new ChatBot(new InitializingManager(this, 12000));
+        this.chatBot = new ChatBot(new InitiatingManager(this, 12000));
         this.users = new ConcurrentHashMap<Long, UserState>();
     }
 

@@ -1,14 +1,14 @@
 package Source.Console;
 import Source.LogicFiles.ChatBot;
 import Source.LogicFiles.ISender;
-import Source.LogicFiles.InitializingManager;
+import Source.LogicFiles.InitiatingManager;
 import Source.LogicFiles.UserState;
 
 import java.util.Scanner;
 
 public class ConsoleRealisation implements ISender {
 
-    private ChatBot chatBot = new ChatBot(new InitializingManager(this, 12000));
+    private ChatBot chatBot = new ChatBot(new InitiatingManager(this, 12000));
 
     public void consoleRun() {
         Scanner input = new Scanner(System.in);

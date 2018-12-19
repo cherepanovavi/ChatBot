@@ -2,12 +2,12 @@ package Source.LogicFiles;
 
 import java.util.Timer;
 
-public class ChatInitializer{
+public class ChatInitiator {
     private UserState userState;
     private ISender sender;
     private Timer timer;
 
-    public ChatInitializer(UserState userState, ISender sender, long delayInMiliseconds) {
+    public ChatInitiator(UserState userState, ISender sender, long delayInMiliseconds) {
         this.userState = userState;
         this.sender = sender;
         timer = new Timer();

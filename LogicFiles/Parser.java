@@ -126,7 +126,7 @@ public class Parser {
         int j = text.indexOf("Переходим");
         if (i == -1)
             return text;
-        String result = String.format("%s<i>%s</i>\n<a href= \"%s\"> Читать далее</a>\n%s", text.substring(0, a), text.substring(a+1, i - 1), text.substring(i, j-1), text.substring(j));
+        String result = String.format("%s<i>%s</i>\n<a href= \"%s\">Читать далее</a>\n%s", text.substring(0, a+1), text.substring(a+1, i), text.substring(i, j), text.substring(j));
         return result;
     }
 

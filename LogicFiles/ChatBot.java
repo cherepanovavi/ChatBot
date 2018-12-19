@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ChatBot{
 
-    private InitializingManager manager;
+    private InitiatingManager manager;
 
     public final Question[] questions = Parser.parseQuestions();
     public static int attemptsCount = 3;
@@ -18,7 +18,7 @@ public class ChatBot{
     public ChatBot(){
 
     }
-    public ChatBot(InitializingManager manager){
+    public ChatBot(InitiatingManager manager){
         this.manager = manager;
     }
 

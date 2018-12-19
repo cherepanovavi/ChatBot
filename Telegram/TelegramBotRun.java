@@ -13,6 +13,7 @@ public class TelegramBotRun {
     private static String proxyHost = "odinmillion-vpn.cloudapp.net";
     private static Integer proxyPort = 31337;
 
+
     public static void main(String[] args) {
         try {
             ApiContextInitializer.init(); // Инициализируем апи

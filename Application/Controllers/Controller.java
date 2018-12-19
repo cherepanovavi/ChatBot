@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class Controller implements ISender{
-    private ChatBot chatBot = new ChatBot( new InitializingManager(this, 120000));
+    private ChatBot chatBot = new ChatBot( new InitiatingManager(this, 120000));
     private UserState userState;
     private UsersBaseChanger usersBaseChanger = new UsersBaseChanger();
     private ObservableList<UserState> usersList = usersBaseChanger.selectFromDataBase();
