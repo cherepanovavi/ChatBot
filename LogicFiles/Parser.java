@@ -17,20 +17,25 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Parser {
-    public static Question[] parseQuestions() {
-        List<Question> questions = new ArrayList<Question>();
+    public static Question[] parseQuestionsFromFile() {
         String s = readFromFile(new File("src/Source/LogicFiles/question_base"));
-        JSONObject obj = null;
-        try {
-            obj = new JSONObject(s);
-            JSONArray arr = obj.getJSONArray("base");
-            for (int i = 0; i < arr.length(); i++) {
-                questions.add(parseQuestion(arr.getJSONObject(i)));
+        return parseQuestions(s).toArray(new Question[0]);
+    }
+    public static ArrayList<Question> parseQuestions(String s){
+        ArrayList<Question> questions = new ArrayList<Question>();
+        if (s!= null){
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(s);
+                JSONArray arr = obj.getJSONArray("base");
+                for (int i = 0; i < arr.length(); i++) {
+                    questions.add(parseQuestion(arr.getJSONObject(i)));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        return questions.toArray(new Question[0]);
+        return questions;
     }
 
     public static String readFromFile(File file) {

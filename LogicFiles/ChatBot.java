@@ -8,7 +8,7 @@ public class ChatBot{
 
     private InitiatingManager manager;
 
-    public final Question[] questions = Parser.parseQuestions();
+    public final Question[] questions = Parser.parseQuestionsFromFile();
     public static int attemptsCount = 3;
 
     public String getSkipMessage() {
