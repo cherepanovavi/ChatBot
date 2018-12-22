@@ -212,7 +212,7 @@ public class Parser {
     public static String getFileFromGit(){
         try
         {
-            URL url = new URL("https://raw.githubusercontent.com/cherepanovavi/ChatBot/telegram/LogicFiles/question_base");
+            URL url = new URL("https://raw.githubusercontent.com/cherepanovavi/ChatBot/telegram/src/main/java/LogicFiles/question_base");
             String userName = "DeniskinBeast";
             String password = "DeniskinBeast2018";
             URLConnection con = url.openConnection();
