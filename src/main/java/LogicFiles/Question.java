@@ -1,4 +1,4 @@
-package LogicFiles;
+package main.java.LogicFiles;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;

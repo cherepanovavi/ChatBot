@@ -1,4 +1,4 @@
-package LogicFiles;
+package main.java.LogicFiles;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -45,38 +45,6 @@ public class Parser {
         return questions;
     }
 
-    public static String createJSON(List<Question> questions){
-        JSONObject obj = new JSONObject();
-        JSONArray json_questions = new JSONArray();
-        for (int i = 0; i<questions.toArray().length; i++){
-            json_questions.put(getJSONforQuestion(questions.get(i)));
-        }
-        try {
-            obj.put("base", json_questions);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return obj.toString();
-    }
-
-    public static JSONObject getJSONforQuestion(Question question){
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("question", question.getQuestion());
-            obj.put("cost", question.getCost());
-            obj.put("explanation", question.getExplanation());
-            obj.put("hint", question.getHint());
-            JSONArray json_answers = new JSONArray();
-            List<String> answers = question.getAnswers();
-            for (int i = 0; i < answers.toArray().length; i++)
-                json_answers.put(answers.get(i));
-            obj.put("answers", json_answers);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return obj;
-    }
-
     public static String readFromFile(File file) {
         StringBuilder s = new StringBuilder();
         Scanner in = null;
@@ -109,6 +77,7 @@ public class Parser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static JSONObject getJSONforQuestion(Question question){

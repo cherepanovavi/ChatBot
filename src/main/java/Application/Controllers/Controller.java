@@ -1,7 +1,7 @@
-package Application.Controllers;
+package main.java.Application.Controllers;
 
-import Application.UsersBaseChanger;
-import LogicFiles.*;
+import main.java.Application.UsersBaseChanger;
+import main.java.LogicFiles.*;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

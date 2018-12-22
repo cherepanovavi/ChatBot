@@ -1,8 +1,8 @@
-package Console;
-import LogicFiles.ChatBot;
-import LogicFiles.ISender;
-import LogicFiles.InitiatingManager;
-import LogicFiles.UserState;
+package main.java.Console;
+import main.java.LogicFiles.ChatBot;
+import main.java.LogicFiles.ISender;
+import main.java.LogicFiles.InitiatingManager;
+import main.java.LogicFiles.UserState;
 
 import java.util.Scanner;
 

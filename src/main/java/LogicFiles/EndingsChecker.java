@@ -1,4 +1,4 @@
-package LogicFiles;
+package main.java.LogicFiles;
 
 public class EndingsChecker {
 
