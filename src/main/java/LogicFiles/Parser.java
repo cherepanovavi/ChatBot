@@ -1,4 +1,4 @@
-package main.java.LogicFiles;
+package LogicFiles;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

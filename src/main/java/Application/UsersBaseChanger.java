@@ -1,6 +1,6 @@
-package main.java.Application;
+package Application;
 
-import main.java.LogicFiles.UserState;
+import LogicFiles.UserState;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

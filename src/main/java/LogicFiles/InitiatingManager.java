@@ -1,4 +1,4 @@
-package main.java.LogicFiles;
+package LogicFiles;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,7 +1,7 @@
-package main.java.Application.Controllers;
+package Application.Controllers;
 
-import main.java.LogicFiles.Parser;
-import main.java.LogicFiles.Question;
+import LogicFiles.Parser;
+import LogicFiles.Question;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

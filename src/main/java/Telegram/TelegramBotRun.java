@@ -1,4 +1,4 @@
-package main.java.Telegram;
+package Telegram;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.DefaultBotOptions;

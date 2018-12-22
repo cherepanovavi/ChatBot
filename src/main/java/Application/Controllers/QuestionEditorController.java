@@ -1,6 +1,6 @@
-package main.java.Application.Controllers;
+package Application.Controllers;
 
-import main.java.LogicFiles.Question;
+import LogicFiles.Question;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
