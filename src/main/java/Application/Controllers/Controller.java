@@ -1,28 +1,29 @@
-package Source.Application;
+package Application.Controllers;
 
-import Source.LogicFiles.ChatBot;
-import Source.LogicFiles.UserState;
-import javafx.collections.FXCollections;
+import Application.UsersBaseChanger;
+import LogicFiles.*;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
-public class Controller {
-    private ChatBot chatBot = new ChatBot();
+public class Controller implements ISender{
+    private ChatBot chatBot = new ChatBot( new InitiatingManager(this, 120000));
     private UserState userState;
     private UsersBaseChanger usersBaseChanger = new UsersBaseChanger();
     private ObservableList<UserState> usersList = usersBaseChanger.selectFromDataBase();
-
-//    private void feelTestData() {
-//        usersList.add(new UserState("Артем"));
-//        usersList.add(new UserState("Nikita"));
-//        usersList.add(new UserState("Gregory"));
-//    }
 
     @FXML
     private TextArea chatArea;
@@ -47,6 +48,9 @@ public class Controller {
 
     @FXML
     private TableColumn<?, ?> attemptsColumn;
+
+    @FXML
+    private Button adminButton;
 
     @FXML
     private void initialize() {
@@ -77,6 +81,7 @@ public class Controller {
         if (userState.getQuestionNumber() == chatBot.questions.length) {
             usersBaseChanger.insertIntoDataBase(userState);
             chatArea.appendText("\n[БОТ]:" + chatBot.getSessionResult(userState));
+            userState.restart();
         }
     }
 
@@ -97,6 +102,7 @@ public class Controller {
         userState = new UserState(userName);
         usersList.add(userState);
         chatArea.appendText("\n[БОТ]:" + chatBot.getWelcomeMessage(userName));
+        adminButton.setDisable(true);
         nameEnter.setDisable(true);
         nameEnter.setVisible(false);
         answerButton.setPrefWidth(answerButton.getWidth() + nameEnter.getWidth());
@@ -104,5 +110,28 @@ public class Controller {
 
     public void onAnswer(ActionEvent actionEvent) {
         realisationForGUI(userState);
+    }
+
+    public void showLoggingInWindow(ActionEvent actionEvent) {
+        try {
+            Stage stage = new Stage();
+            Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fxmlFiles/adminLogIn.fxml"));
+            stage.setTitle("Вход в качестве администратора");
+            stage.setMinWidth(400);
+            stage.setMinHeight(200);
+            stage.setResizable(false);
+            stage.setScene(new Scene(root));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initOwner(((Node)actionEvent.getSource()).getScene().getWindow());
+            stage.show();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void sendMessage(UserState userState, String message) {
+        chatArea.appendText("\n[БОТ]:" + message);
     }
 }

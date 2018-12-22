@@ -1,9 +1,9 @@
-package Source.Tests;
+package Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import Source.LogicFiles.ChatBot;
-import Source.LogicFiles.UserState;
+import LogicFiles.ChatBot;
+import LogicFiles.UserState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -38,8 +38,24 @@ class UserStateTest {
     @Test
     public void addScores() {
         UserState user = new UserState("Афанасий");
-        int scores1 = user.getScore();
+        int scores = user.getScore();
         user.addScores(2);
-        assertEquals(scores1 + 2, user.getScore());
+        assertEquals(scores + 2, user.getScore());
+    }
+
+    @Test
+    public void restart(){
+        String name = "User";
+        UserState user = new UserState(name);
+        int scores = user.getScore();
+        int questNum = user.getQuestionNumber();
+        int questAtt = user.getQuestionAttempts();
+        user.addScores(2);
+        user.moveToNextQuestion();
+        user.spendAnAttempt();
+        user.restart();
+        assertEquals(scores, user.getScore());
+        assertEquals(questNum, user.getQuestionNumber());
+        assertEquals(questAtt, user.getQuestionAttempts());
     }
 }

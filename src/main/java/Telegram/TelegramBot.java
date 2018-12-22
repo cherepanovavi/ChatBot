@@ -1,7 +1,6 @@
-package Source.Telegram;
+package Telegram;
 
-import Source.LogicFiles.ChatBot;
-import Source.LogicFiles.UserState;
+import LogicFiles.*;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -12,7 +11,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TelegramBot extends TelegramLongPollingBot{
+public class TelegramBot extends TelegramLongPollingBot implements ISender {
     private String token;
     private String botName;
     private ChatBot chatBot;
@@ -22,7 +21,7 @@ public class TelegramBot extends TelegramLongPollingBot{
         super(botOptions);
         this.token = "674868490:AAHQzYxarifgBHFDrSIhPsmcwaEAkWIxtt0";
         this.botName = "logic_tasks_bot";
-        this.chatBot = new ChatBot();
+        this.chatBot = new ChatBot(new InitiatingManager(this, 12000));
         this.users = new ConcurrentHashMap<Long, UserState>();
     }
 
@@ -32,35 +31,27 @@ public class TelegramBot extends TelegramLongPollingBot{
         String text = msg.getText();
         UserState user = getUser(msg);
         if (text.equals("/start"))
-            sendMsg(msg, chatBot.getWelcomeMessage(user.getName()));
+            sendMsg(msg.getChatId(), chatBot.getWelcomeMessage(user.getName()));
         for (var answer: chatBot.analyzeAnswer(user, text))
             if (answer != null)
-                sendMsg(msg, answer);
+                sendMsg(msg.getChatId(), answer);
         if (user.getQuestionNumber() == chatBot.questions.length) {
-            sendMsg(msg, chatBot.getSessionResult(user));
+            sendMsg(msg.getChatId(), chatBot.getSessionResult(user));
             updateUserState(msg);
         }
     }
 
     private void updateUserState(Message msg){
         Long id  = msg.getChatId();
-        String userName = getUserName(msg);
-        UserState user =  new UserState(userName);
-        users.replace(id, user);
+        users.get(id).restart();
     }
-// TODO использовать Concurrent HashMap
-    private UserState getUser(Message msg) {
-        Long id =msg.getChatId();
-        String userName = getUserName(msg);
-        if (!users.keySet().contains(id)){
-            UserState user =  new UserState(userName);
-            users.put(id, user);
-            return user;
-        }
-        return users.get(id);
 
+    private UserState getUser(Message msg) {
+        Long id = msg.getChatId();
+        String userName = getUserName(msg);
+        return  users.computeIfAbsent(id, f -> (new UserState(userName, id)));
     }
-// TODO доработать код
+
     private String getUserName(Message msg){
         var chat = msg.getChat();
         String firstName = chat.getFirstName();
@@ -78,10 +69,10 @@ public class TelegramBot extends TelegramLongPollingBot{
         return res.substring(0, res.length() - 1);
     }
 
-    private void sendMsg(Message msg, String text) {
+    private void sendMsg(long id, String text) {
         SendMessage s = new SendMessage();
-        s.setChatId(msg.getChatId()); // Боту может писать не один человек, и поэтому чтобы отправить сообщение, грубо говоря нужно узнать куда его отправлять
-        s.setText(text);
+        s.setChatId(id); // Боту может писать не один человек, и поэтому чтобы отправить сообщение, грубо говоря нужно узнать куда его отправлять
+        s.setText(Parser.decorate(text));
         s.setParseMode("HTML");
         try { //Чтобы не крашнулась программа при вылете Exception
             execute(s);
@@ -99,5 +90,10 @@ public class TelegramBot extends TelegramLongPollingBot{
     @Override
     public String getBotToken() {
         return token;
+    }
+
+    @Override
+    public void sendMessage(UserState userState, String message) {
+        sendMsg(userState.getId(), message);
     }
 }
